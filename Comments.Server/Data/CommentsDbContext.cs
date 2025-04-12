@@ -1,10 +1,8 @@
-﻿using Comments.Server.Data.Entities;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Comments.Server.Data;
 
-public class CommentsDbContext : IdentityDbContext<User>
+public class CommentsDbContext : DbContext
 {
     public CommentsDbContext(DbContextOptions<CommentsDbContext> options) 
         : base(options)

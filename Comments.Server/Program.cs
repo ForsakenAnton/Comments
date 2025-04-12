@@ -1,11 +1,10 @@
 using Comments.Server.ActionFilters;
 using Comments.Server.Data;
-using Comments.Server.Data.Entities;
 using Comments.Server.Extensions;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
 using Scalar.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,15 +17,19 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     options.SuppressModelStateInvalidFilter = true;
 });
 
+builder.Services.AddDbContext<CommentsDbContext>(optionsAction =>
+{
+    string cs = builder.Configuration.GetConnectionString("sqlConnection")!;
+    optionsAction.UseSqlServer(cs);
+});
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.ConfigureCors();
 builder.Services.AddAuthentication();
-builder.Services.ConfigureIdentity();
 
-builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<ValidationFilterAttribute>();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -48,10 +51,7 @@ using (var score = app.Services.CreateAsyncScope())
     await dbContext.Database.EnsureDeletedAsync();
     await dbContext.Database.EnsureCreatedAsync();
 
-    var userManager = sp.GetRequiredService<UserManager<User>>();
-    var signInManager = sp.GetRequiredService<SignInManager<User>>();
-
-    await DbInitializer.InitializeAsync(dbContext, userManager, signInManager);
+    await DbInitializer.InitializeAsync(dbContext);
 }
 
 // Configure the HTTP request pipeline.
@@ -60,6 +60,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference(options =>
     {
+        options.Title = "Simple Comments API";
         options.Theme = ScalarTheme.Kepler;
     });
 }
