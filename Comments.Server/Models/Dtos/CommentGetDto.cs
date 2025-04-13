@@ -19,4 +19,9 @@ public class CommentGetDto
     public int UserId { get; set; }
 
     public UserGetDto? User { get; set; }
+
+    // Unidirectional tree, no circular links
+    // I build the tree on the server
+    // And the client just displays the tree, no other actions
+    public List<CommentGetDto> Replies { get; set; } = new();
 }

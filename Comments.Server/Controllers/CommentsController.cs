@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using Comments.Server.Data;
 using Comments.Server.Data.Entities;
+using Comments.Server.Extensions;
 using Comments.Server.Models.Dtos;
 using Comments.Server.Models.RequestFeatures;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
+using System.Linq.Expressions;
 using System.Text.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -29,38 +32,44 @@ public class CommentsController : ControllerBase
         _commentsDbContext = commentsDbContext;
     }
 
-
     // GET: api/<CommentsController>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<CommentGetDto>>> GetComments(
         [FromQuery] CommentParameters commentParameters)
     {
-        IQueryable<Comment> comments = _commentsDbContext.Comments
-            .Include(c => c.User);
+        IQueryable<Comment> rootComments = _commentsDbContext.Comments
+            .Include(c => c.User)
+            .Where(c => c.ParentId == null); // (!!!)
 
-        // sorting
-        comments = commentParameters.OrderBy switch
+        // Sorting
+        rootComments = commentParameters.OrderBy switch
         {
-            "date desc" => comments.OrderByDescending(c => c.CreationDate),
-            "date" or "date asc" => comments.OrderBy(c => c.CreationDate), // !!!
-            "user_name" or "user_name asc" => comments.OrderBy(c => c.User!.UserName),
-            "user_name desc" => comments.OrderByDescending(c => c.User!.UserName),
-            "user_email" or "user_email asc" => comments.OrderBy(c => c.User!.Email),
-            "user_email desc" => comments.OrderByDescending(c => c.User!.Email),
-            _ => comments.OrderByDescending(c => c.CreationDate)
+            "date desc" => rootComments.OrderByDescending(c => c.CreationDate),
+            "date" or "date asc" => rootComments.OrderBy(c => c.CreationDate),
+            "user_name" or "user_name asc" => rootComments.OrderBy(c => c.User!.UserName),
+            "user_name desc" => rootComments.OrderByDescending(c => c.User!.UserName),
+            "user_email" or "user_email asc" => rootComments.OrderBy(c => c.User!.Email),
+            "user_email desc" => rootComments.OrderByDescending(c => c.User!.Email),
+            _ => rootComments.OrderByDescending(c => c.CreationDate)
         };
 
-        // pagination
-        comments = comments
+        // Pagination
+        rootComments = rootComments
             .Skip((commentParameters.PageNumber - 1) * commentParameters.PageSize)
             .Take(commentParameters.PageSize);
 
+        // Here I explicitly load related comments (children comments)
+        await _commentsDbContext.Comments.LoadAsync();
+
+        
         var pagedCommentsWithMetaData = new PagedList<Comment>(
-            items: await comments.ToListAsync(),
+            items: await rootComments.ToListAsync(),
             totalCount: await _commentsDbContext.Comments.CountAsync(),
             currentPage: commentParameters.PageNumber,
             pageSize: commentParameters.PageSize);
 
+        // Here I map to CommentGetDto and have the rootComments
+        // with three of children, and don't have circular references
         var commentDtos = _mapper
             .Map<List<CommentGetDto>>(pagedCommentsWithMetaData);
 
@@ -70,4 +79,14 @@ public class CommentsController : ControllerBase
 
         return Ok(commentDtos);
     }
+
+    //private static IQueryable<Comment> OrderBy<TValue>(
+    //    IQueryable<Comment> comments,
+    //    Expression<Func<Comment, TValue>> expression,
+    //    bool descending)
+    //{
+    //    return descending
+    //        ? comments.OrderByDescending(expression)
+    //        : comments.OrderBy(expression);
+    //}
 }

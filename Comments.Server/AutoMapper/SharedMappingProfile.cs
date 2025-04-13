@@ -9,6 +9,10 @@ public class SharedMappingProfile : Profile
     public SharedMappingProfile()
     {
         CreateMap<User, UserGetDto>();
-        CreateMap<Comment, CommentGetDto>();
+
+        CreateMap<Comment, CommentGetDto>()
+            .ForMember(
+                dest => dest.Replies, 
+                opt => opt.MapFrom(src => src.Replies));
     }
 }

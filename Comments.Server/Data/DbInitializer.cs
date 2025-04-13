@@ -85,96 +85,97 @@ public static class DbInitializer
         #endregion
 
         #region Comment creation
-        var comment1 = new Comment()
-        {
-            Text = "Hello, world! This is the first comment.",
-            CreationDate = DateTime.Now,
-            ImageFile = imageServerPaths[0],
-            TextFile = textFileServerPath,
-            User = user1,
-            Parent = null,
-            Replies = new List<Comment>()
-            {
-                new Comment()
-                {
-                    Text = "This is a reply to the first comment.",
-                    CreationDate = DateTime.Now.AddDays(1),
-                    ImageFile = imageServerPaths[1],
-                    TextFile = textFileServerPath,
-                    User = user2,
-                    Replies = new List<Comment>()
-                    {
-                        new Comment()
-                        {
-                            Text = "This is a reply to the reply to the first comment.",
-                            CreationDate = DateTime.Now.AddDays(2),
-                            ImageFile = imageServerPaths[2],
-                            User = user3,
-                            Replies = new List<Comment>()
-                            {
-                                new Comment()
-                                {
-                                    Text = "This is a reply to the reply to the reply to the first comment.",
-                                    CreationDate = DateTime.Now.AddDays(2.5),
-                                    TextFile = textFileServerPath,
-                                    User = user4,
-                                    Replies = new List<Comment>()
-                                    {
-                                        new Comment()
-                                        {
-                                            Text = "This is a reply to the reply to the reply to the reply to the first comment.",
-                                            CreationDate = DateTime.Now.AddDays(2.6),
-                                            User = user5,
-                                            Replies = new List<Comment>()
-                                            {
-                                                new Comment()
-                                                {
-                                                    Text = "This is a reply to the reply to the reply to the reply to the reply to the first comment.",
-                                                    ImageFile = imageServerPaths[3],
-                                                    CreationDate = DateTime.Now.AddDays(2.7),
-                                                    User = user1,
-                                                    Replies = new List<Comment>()
-                                                    {
-                                                        new Comment()
-                                                        {
-                                                            Text = "This is a reply to the reply to the reply to the reply to the reply to the reply to the first comment.",
-                                                            CreationDate = DateTime.Now.AddDays(2.8),
-                                                            ImageFile = imageServerPaths[5],
-                                                            TextFile = textFileServerPath,
-                                                            User = user2,
-                                                        }
-                                                    },
-                                                }
-                                            },
-                                        }
-                                    },
-                                }
-                            },
-                        },
-                        new Comment()
-                        {
-                            Text = "This is a reply to the reply to the first comment.",
-                            CreationDate = DateTime.Now.AddDays(1.5),
-                            User = user4,
-                            Replies = new List<Comment>()
-                            {
-                                new Comment()
-                                {
-                                    Text = "This is a reply to the reply to the reply to the first comment.",
-                                    CreationDate = DateTime.Now.AddDays(4),
-                                    ImageFile = imageServerPaths[9],
-                                    TextFile = textFileServerPath,
-                                    User = user5,
-                                }
-                            },
-                        }
-                    },
-                }
-            }
-        };
+        //var comment1 = new Comment()
+        //{
+        //    Text = "Hello, world! This is the first comment.",
+        //    CreationDate = DateTime.Now,
+        //    ImageFile = imageServerPaths[0],
+        //    TextFile = textFileServerPath,
+        //    User = user1,
+        //    Parent = null,
+        //    Replies = new List<Comment>()
+        //    {
+        //        new Comment()
+        //        {
+        //            Text = "This is a reply to the first comment.",
+        //            CreationDate = DateTime.Now.AddDays(1),
+        //            ImageFile = imageServerPaths[1],
+        //            TextFile = textFileServerPath,
+        //            User = user2,
+        //            Replies = new List<Comment>()
+        //            {
+        //                new Comment()
+        //                {
+        //                    Text = "This is a reply to the reply to the first comment.",
+        //                    CreationDate = DateTime.Now.AddDays(2),
+        //                    ImageFile = imageServerPaths[2],
+        //                    User = user3,
+        //                    Replies = new List<Comment>()
+        //                    {
+        //                        new Comment()
+        //                        {
+        //                            Text = "This is a reply to the reply to the reply to the first comment.",
+        //                            CreationDate = DateTime.Now.AddDays(2.5),
+        //                            TextFile = textFileServerPath,
+        //                            User = user4,
+        //                            Replies = new List<Comment>()
+        //                            {
+        //                                new Comment()
+        //                                {
+        //                                    Text = "This is a reply to the reply to the reply to the reply to the first comment.",
+        //                                    CreationDate = DateTime.Now.AddDays(2.6),
+        //                                    User = user5,
+        //                                    Replies = new List<Comment>()
+        //                                    {
+        //                                        new Comment()
+        //                                        {
+        //                                            Text = "This is a reply to the reply to the reply to the reply to the reply to the first comment.",
+        //                                            ImageFile = imageServerPaths[3],
+        //                                            CreationDate = DateTime.Now.AddDays(2.7),
+        //                                            User = user1,
+        //                                            Replies = new List<Comment>()
+        //                                            {
+        //                                                new Comment()
+        //                                                {
+        //                                                    Text = "This is a reply to the reply to the reply to the reply to the reply to the reply to the first comment.",
+        //                                                    CreationDate = DateTime.Now.AddDays(2.8),
+        //                                                    ImageFile = imageServerPaths[5],
+        //                                                    TextFile = textFileServerPath,
+        //                                                    User = user2,
+        //                                                }
+        //                                            },
+        //                                        }
+        //                                    },
+        //                                }
+        //                            },
+        //                        }
+        //                    },
+        //                },
+        //                new Comment()
+        //                {
+        //                    Text = "This is a reply to the reply to the first comment.",
+        //                    CreationDate = DateTime.Now.AddDays(1.5),
+        //                    User = user4,
+        //                    Replies = new List<Comment>()
+        //                    {
+        //                        new Comment()
+        //                        {
+        //                            Text = "This is a reply to the reply to the reply to the first comment.",
+        //                            CreationDate = DateTime.Now.AddDays(4),
+        //                            ImageFile = imageServerPaths[9],
+        //                            TextFile = textFileServerPath,
+        //                            User = user5,
+        //                        }
+        //                    },
+        //                }
+        //            },
+        //        }
+        //    }
+        //};
 
 
         List<Comment> comments1 = new();
+        //for (int i = 0; i < 10; i++)
         for (int i = 0; i < 10; i++)
         {
             int nextUserIndex = Random.Shared.Next(0, users.Count - 1);
@@ -199,90 +200,105 @@ public static class DbInitializer
                         Text = $"This is a reply to comment number {i + 1}.",
                         CreationDate = creationDate.AddMinutes(i * i),
                         User = users[nextUserIndex],
-                    }
-                },
-            });
-        }
-
-        List<Comment> comments2 = new();
-        for (int i = 0; i < 10; i++)
-        {
-            int nextUserIndex = Random.Shared.Next(0, users.Count - 1);
-
-            DateTime creationDate = CreateRandomDateTime();
-
-            string? imageFile = i % 4 == 0 ? imageServerPaths[i % imageServerPaths.Length] : null;
-            string? textFile = i % 5 == 0 ? textFileServerPath : null;
-
-            comments1.Add(new Comment()
-            {
-                Text = $"Hello, world! This is comment number {i + 1}.",
-                CreationDate = creationDate,
-                ImageFile = imageFile,
-                TextFile = textFile,
-                User = users[nextUserIndex],
-                Parent = null,
-                Replies = new List<Comment>()
-                {
-                    new Comment()
-                    {
-                        Text = $"This is a reply to comment number {i + 1}.",
-                        CreationDate = creationDate.AddMinutes(i),
-                        User = users[nextUserIndex],
                         Replies = new List<Comment>()
                         {
                             new Comment()
                             {
-                                Text = $"This is a reply to the reply to comment number {i + 1}.",
-                                CreationDate = creationDate.AddHours(i + 1),
+                                Text = $"This is a reply to reply number {i + 1}.",
+                                CreationDate = creationDate.AddMinutes(i * i),
                                 User = users[nextUserIndex],
-                            },
-                            new Comment()
-                            {
-                                Text = $"This is a reply to the reply to the reply to comment number {i + 1}.",
-                                CreationDate = creationDate.AddHours(i + 2),
-                                ImageFile = imageFile,
-                                TextFile = textFile,
-                                User = users[nextUserIndex],
-                            },
-                        },
+                            }
+                        }
+                    },
+                    new Comment()
+                    {
+                        Text = $"This is a reply to comment number {i + 1}.",
+                        CreationDate = creationDate.AddMinutes(i * i),
+                        User = users[nextUserIndex],
                     }
                 },
             });
         }
 
-        List<Comment> comments3 = new();
-        for (int i = 0; i < 100; i++)
-        {
-            int nextUserIndex = Random.Shared.Next(0, users.Count - 1);
+        //List<Comment> comments2 = new();
+        //for (int i = 0; i < 10; i++)
+        //{
+        //    int nextUserIndex = Random.Shared.Next(0, users.Count - 1);
 
-            DateTime creationDate = CreateRandomDateTime();
+        //    DateTime creationDate = CreateRandomDateTime();
 
-            string? imageFile = i % 6 == 0 ? imageServerPaths[i % imageServerPaths.Length] : null;
-            string? textFile = i % 7 == 0 ? textFileServerPath : null;
+        //    string? imageFile = i % 4 == 0 ? imageServerPaths[i % imageServerPaths.Length] : null;
+        //    string? textFile = i % 5 == 0 ? textFileServerPath : null;
 
-            comments3.Add(new Comment()
-            {
-                Text = $"Some Random comment {i + 1}.",
-                CreationDate = creationDate,
-                ImageFile = imageFile,
-                TextFile = textFile,
-                User = users[nextUserIndex],
-                Parent = null,
-            });
-        }
+        //    comments1.Add(new Comment()
+        //    {
+        //        Text = $"Hello, world! This is comment number {i + 1}.",
+        //        CreationDate = creationDate,
+        //        ImageFile = imageFile,
+        //        TextFile = textFile,
+        //        User = users[nextUserIndex],
+        //        Parent = null,
+        //        Replies = new List<Comment>()
+        //        {
+        //            new Comment()
+        //            {
+        //                Text = $"This is a reply to comment number {i + 1}.",
+        //                CreationDate = creationDate.AddMinutes(i),
+        //                User = users[nextUserIndex],
+        //                Replies = new List<Comment>()
+        //                {
+        //                    new Comment()
+        //                    {
+        //                        Text = $"This is a reply to the reply to comment number {i + 1}.",
+        //                        CreationDate = creationDate.AddHours(i + 1),
+        //                        User = users[nextUserIndex],
+        //                    },
+        //                    new Comment()
+        //                    {
+        //                        Text = $"This is a reply to the reply to the reply to comment number {i + 1}.",
+        //                        CreationDate = creationDate.AddHours(i + 2),
+        //                        ImageFile = imageFile,
+        //                        TextFile = textFile,
+        //                        User = users[nextUserIndex],
+        //                    },
+        //                },
+        //            }
+        //        },
+        //    });
+        //}
+
+        //List<Comment> comments3 = new();
+        //for (int i = 0; i < 100; i++)
+        //{
+        //    int nextUserIndex = Random.Shared.Next(0, users.Count - 1);
+
+        //    DateTime creationDate = CreateRandomDateTime();
+
+        //    string? imageFile = i % 6 == 0 ? imageServerPaths[i % imageServerPaths.Length] : null;
+        //    string? textFile = i % 7 == 0 ? textFileServerPath : null;
+
+        //    comments3.Add(new Comment()
+        //    {
+        //        Text = $"Some Random comment {i + 1}.",
+        //        CreationDate = creationDate,
+        //        ImageFile = imageFile,
+        //        TextFile = textFile,
+        //        User = users[nextUserIndex],
+        //        Parent = null,
+        //    });
+        //}
 
 
         List<Comment> allComments = comments1
-            .Concat(comments2)
-            .Concat(comments3)
+            //.Concat(comments2)
+            //.Concat(comments3)
             .ToList();
 
         allComments = allComments
             .Shuffle()
             .ToList();
 
-        allComments.Insert(0, comment1);
+        //allComments.Insert(0, comment1);
 
         await context.Comments.AddRangeAsync(allComments);
         await context.SaveChangesAsync();
@@ -293,8 +309,9 @@ public static class DbInitializer
     private static DateTime CreateRandomDateTime()
     {
         return DateTime.Now
-            .AddDays(Random.Shared.Next(-100, 100))
-            .AddMinutes(Random.Shared.Next(-1000, 1000))
-            .AddSeconds(Random.Shared.Next(-1000, 1000));
+            .AddYears(Random.Shared.Next(-100, 100));
+            //.AddDays(Random.Shared.Next(-100, 100))
+            //.AddMinutes(Random.Shared.Next(-1000, 1000))
+            //.AddSeconds(Random.Shared.Next(-1000, 1000));
     }
 }
