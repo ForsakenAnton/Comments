@@ -1,16 +1,11 @@
 ﻿using AutoMapper;
 using Comments.Server.Data;
 using Comments.Server.Data.Entities;
-using Comments.Server.Extensions;
 using Comments.Server.Models.Dtos;
 using Comments.Server.Models.RequestFeatures;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Linq;
-using System.Linq.Expressions;
 using System.Text.Json;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Comments.Server.Controllers;
 
@@ -39,7 +34,7 @@ public class CommentsController : ControllerBase
     {
         IQueryable<Comment> rootComments = _commentsDbContext.Comments
             .Include(c => c.User)
-            .Where(c => c.ParentId == null); // (!!!)
+            .Where(c => c.ParentId == null);
 
         // Sorting
         rootComments = commentParameters.OrderBy switch
@@ -59,12 +54,15 @@ public class CommentsController : ControllerBase
             .Take(commentParameters.PageSize);
 
         // Here I explicitly load related comments (children comments)
+        // and users of comments, because the users loaded before 
+        // has relation only to root comments
         await _commentsDbContext.Comments.LoadAsync();
+        await _commentsDbContext.Users.LoadAsync();
 
         
         var pagedCommentsWithMetaData = new PagedList<Comment>(
             items: await rootComments.ToListAsync(),
-            totalCount: await _commentsDbContext.Comments.CountAsync(),
+            totalCount: await _commentsDbContext.Comments.CountAsync(c => c.ParentId == null),
             currentPage: commentParameters.PageNumber,
             pageSize: commentParameters.PageSize);
 
