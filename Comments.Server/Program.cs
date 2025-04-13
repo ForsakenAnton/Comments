@@ -1,4 +1,4 @@
-using Comments.Server.ActionFilters;
+﻿using Comments.Server.ActionFilters;
 using Comments.Server.Data;
 using Comments.Server.Extensions;
 using Scalar.AspNetCore;
@@ -46,12 +46,13 @@ if (app.Environment.IsProduction())
 using (var score = app.Services.CreateAsyncScope())
 {
     var sp = score.ServiceProvider;
+    var webHostEnvironment = sp.GetRequiredService<IWebHostEnvironment>();
     var dbContext = sp.GetRequiredService<CommentsDbContext>();
-    
-    await dbContext.Database.EnsureDeletedAsync();
-    await dbContext.Database.EnsureCreatedAsync();
 
-    await DbInitializer.InitializeAsync(dbContext);
+    //await dbContext.Database.EnsureDeletedAsync();
+    //await dbContext.Database.EnsureCreatedAsync();
+
+    await DbInitializer.InitializeAsync(dbContext, webHostEnvironment);
 }
 
 // Configure the HTTP request pipeline.
@@ -66,6 +67,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseStaticFiles();
 
 app.UseCors("CorsPolicy");
 
