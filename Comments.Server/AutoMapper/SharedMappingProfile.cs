@@ -14,5 +14,8 @@ public class SharedMappingProfile : Profile
             .ForMember(
                 dest => dest.Replies, 
                 opt => opt.MapFrom(src => src.Replies));
+
+        CreateMap<CommentCreateDto, Comment>();
+        CreateMap<UserCreateDto, User>();
     }
 }

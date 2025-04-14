@@ -9,7 +9,7 @@ public class CommentCreateDto
     [Required]
     public string Text { get; set; } = "";
 
-    public DateTime CreationDate { get; set; } = DateTime.Now;
+    //public DateTime CreationDate { get; set; } = DateTime.Now;
 
     public IFormFile? ImageFile { get; set; }
     public IFormFile? TextFile { get; set; }
@@ -21,10 +21,7 @@ public class CommentCreateDto
     )]
     public string CaptchaText { get; set; } = "";
 
-
-
     public int? ParentId { get; set; }
-    public int UserId { get; set; }
 
     public UserCreateDto? User { get; set; }
 }

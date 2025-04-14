@@ -1,11 +1,11 @@
-﻿using AutoMapper;
-using Comments.Server.Data;
-using Comments.Server.Data.Entities;
+﻿// Ignore Spelling: Dto
+
+using AutoMapper;
+using Comments.Server.ActionFilters;
 using Comments.Server.Models.Dtos;
 using Comments.Server.Models.RequestFeatures;
 using Comments.Server.Services.Contracts;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
 namespace Comments.Server.Controllers;
@@ -34,5 +34,14 @@ public class CommentsController : ControllerBase
             JsonSerializer.Serialize(metadata));
 
         return Ok(commentDtos);
+    }
+
+
+    [HttpPost]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
+    //[RequestSizeLimit(...)]
+    public async Task<IActionResult> CreateComment(CommentCreateDto comment)
+    {
+        return Ok();
     }
 }
