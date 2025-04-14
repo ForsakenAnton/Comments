@@ -2,15 +2,6 @@
 
 public abstract class RequestParameters
 {
-    /// <summary>
-    /// Сортування. Можливі значення:
-    /// - date
-    /// - date desc
-    /// - user_name
-    /// - user_name desc
-    /// - user_email
-    /// - user_email desc
-    /// </summary>
     public string? OrderBy { get; set; }
 
     const int maxPageSize = 25;
