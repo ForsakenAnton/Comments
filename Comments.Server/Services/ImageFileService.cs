@@ -5,7 +5,7 @@ using SixLabors.ImageSharp.Processing;
 
 namespace Comments.Server.Services;
 
-public class ImageService : IImageService
+public class ImageFileService : IImageFileService
 {
     private readonly IWebHostEnvironment _environment;
     private readonly string[] _allowedImageTypes = new[] 
@@ -15,7 +15,7 @@ public class ImageService : IImageService
         "image/gif",
     };
 
-    public ImageService(IWebHostEnvironment environment)
+    public ImageFileService(IWebHostEnvironment environment)
     {
         _environment = environment;
     }

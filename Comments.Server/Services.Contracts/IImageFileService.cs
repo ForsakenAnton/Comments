@@ -1,6 +1,6 @@
 ﻿namespace Comments.Server.Services.Contracts;
 
-public interface IImageService
+public interface IImageFileService
 {
     Task ResizeAndSaveImageAsync(
         IFormFile imageFile,

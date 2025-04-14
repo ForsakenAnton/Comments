@@ -42,6 +42,7 @@ public class CommentsController : ControllerBase
     //[RequestSizeLimit(...)]
     public async Task<IActionResult> CreateComment(CommentCreateDto comment)
     {
-        return Ok();
+        var result = await _commentsService.CreateCommentAsync(comment);
+        return CreatedAtAction(nameof(CreateComment), new { id = result.Id }, result);
     }
 }

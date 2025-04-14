@@ -36,7 +36,7 @@ builder.Services.AddScoped<ValidationFilterAttribute>();
 
 builder.Services.AddScoped<ICommentsService, CommentsService>();
 builder.Services.AddScoped<IGenerateFileNameService, GenerateFileNameService>();
-builder.Services.AddScoped<IImageService, ImageService>();
+builder.Services.AddScoped<IImageFileService, ImageFileService>();
 builder.Services.AddScoped<ITextFileService, TextFileService>();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

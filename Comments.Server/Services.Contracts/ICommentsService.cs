@@ -9,4 +9,6 @@ public interface ICommentsService
         IEnumerable<CommentGetDto> comments,
         MetaData MetaData
         )> GetCommentsAsync(CommentParameters commentParameters);
+
+    Task<CommentGetDto> CreateCommentAsync(CommentCreateDto commentDto);
 }

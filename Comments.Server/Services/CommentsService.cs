@@ -1,10 +1,15 @@
-﻿using AutoMapper;
+﻿// Ignore Spelling: Dto
+
+using AutoMapper;
 using Comments.Server.Controllers;
 using Comments.Server.Data;
 using Comments.Server.Data.Entities;
 using Comments.Server.Models.Dtos;
+using Comments.Server.Models.ErrorModels;
 using Comments.Server.Models.RequestFeatures;
+using Comments.Server.Models.ValidationModels;
 using Comments.Server.Services.Contracts;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 
 namespace Comments.Server.Services;
@@ -14,16 +19,31 @@ public class CommentsService : ICommentsService
     private readonly ILogger<CommentsController> _logger;
     private readonly IMapper _mapper;
     private readonly CommentsDbContext _commentsDbContext;
+    private readonly IGenerateFileNameService _generatefileNameService;
+    private readonly IImageFileService _imageFileService;
+    private readonly ITextFileService _textFileService;
+    private readonly IWebHostEnvironment _environment;
+    private readonly CommentTextValidator _textValidator;
 
     public CommentsService(
         ILogger<CommentsController> logger,
         IMapper mapper,
-        CommentsDbContext commentsDbContext)
+        CommentsDbContext commentsDbContext,
+        IGenerateFileNameService fileNameService,
+        IImageFileService imageService,
+        ITextFileService textFileService,
+        IWebHostEnvironment environment)
     {
         _logger = logger;
         _mapper = mapper;
         _commentsDbContext = commentsDbContext;
+        _generatefileNameService = fileNameService;
+        _imageFileService = imageService;
+        _textFileService = textFileService;
+        _environment = environment;
+        _textValidator = new CommentTextValidator(); // Можно внедрить через DI, если нужно
     }
+
 
     public async Task<(
         IEnumerable<CommentGetDto> comments,
@@ -65,5 +85,49 @@ public class CommentsService : ICommentsService
         var metadata = pagedCommentsWithMetaData.MetaData;
 
         return (commentDtos, metadata);
+    }
+
+
+    public async Task<CommentGetDto> CreateCommentAsync(CommentCreateDto commentDto)
+    {
+        string sanitizedText = _textValidator.SanitizeText(commentDto.Text);
+
+        string? imageFileName = null;
+        string? textFileName = null;
+
+        if (commentDto.ImageFile is not null)
+        {
+            imageFileName = await _generatefileNameService.GenerateFileName(commentDto.ImageFile);
+            await _imageFileService.ResizeAndSaveImageAsync(commentDto.ImageFile, imageFileName);
+        }
+        if (commentDto.TextFile is not null)
+        {
+            textFileName = await _generatefileNameService.GenerateFileName(commentDto.TextFile);
+            await _textFileService.SaveFileAsync(commentDto.TextFile, textFileName);
+
+        }
+
+        string applicationUrl = _environment.EnvironmentName == "Development" ?
+            "https://localhost:7092" :
+            "https://qwerty123";
+
+        var comment = _mapper.Map<Comment>(commentDto);
+
+        string imageFileServerPath = $"{applicationUrl}/images/{imageFileName}";
+        string textFileServerPath = $"{applicationUrl}/textFiles/{textFileName}";
+
+
+        comment.ImageFile = imageFileName;
+        comment.TextFile = textFileName;
+        comment.Text = sanitizedText;
+
+        // TODO Add user saving logic ...
+
+        //_commentsDbContext.Comments.Add(comment);
+        //await _commentsDbContext.SaveChangesAsync();
+
+        ////await _commentsDbContext.Entry(comment).Reference(c => c.User).LoadAsync();
+
+        //return _mapper.Map<CommentGetDto>(comment);
     }
 }
