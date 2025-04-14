@@ -26,7 +26,7 @@ public class TextFileService : ITextFileService
         CheckIsValidSize(textFile.Length);
         CheckIsValidType(textFile.ContentType);
 
-        string relativePath = Path.Combine("images", fileNameForSave);
+        string relativePath = Path.Combine("textFiles", fileNameForSave);
         string savePath = Path.Combine(_environment.WebRootPath, relativePath);
 
         using FileStream outputStream = new FileStream(savePath, FileMode.Create);

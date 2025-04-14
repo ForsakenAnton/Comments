@@ -5,11 +5,9 @@ using Comments.Server.Controllers;
 using Comments.Server.Data;
 using Comments.Server.Data.Entities;
 using Comments.Server.Models.Dtos;
-using Comments.Server.Models.ErrorModels;
 using Comments.Server.Models.RequestFeatures;
 using Comments.Server.Models.ValidationModels;
 using Comments.Server.Services.Contracts;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 
 namespace Comments.Server.Services;
@@ -41,7 +39,8 @@ public class CommentsService : ICommentsService
         _imageFileService = imageService;
         _textFileService = textFileService;
         _environment = environment;
-        _textValidator = new CommentTextValidator(); // Можно внедрить через DI, если нужно
+
+        _textValidator = new CommentTextValidator();
     }
 
 
@@ -113,21 +112,39 @@ public class CommentsService : ICommentsService
 
         var comment = _mapper.Map<Comment>(commentDto);
 
-        string imageFileServerPath = $"{applicationUrl}/images/{imageFileName}";
-        string textFileServerPath = $"{applicationUrl}/textFiles/{textFileName}";
+
+        string? imageFileServerPath = imageFileName is not null
+            ? $"{applicationUrl}/images/{imageFileName}"
+            : null;
+
+        string? textFileServerPath = textFileName is not null
+            ? $"{applicationUrl}/textFiles/{textFileName}"
+            : null;
 
 
-        comment.ImageFile = imageFileName;
-        comment.TextFile = textFileName;
+        comment.ImageFile = imageFileServerPath;
+        comment.TextFile = textFileServerPath;
         comment.Text = sanitizedText;
 
-        // TODO Add user saving logic ...
+        var user = await _commentsDbContext.Users
+            .FirstOrDefaultAsync(u => u.Email == comment.User!.Email);
 
-        //_commentsDbContext.Comments.Add(comment);
-        //await _commentsDbContext.SaveChangesAsync();
+        if (user is null)
+        {
+            user = comment.User!;
 
-        ////await _commentsDbContext.Entry(comment).Reference(c => c.User).LoadAsync();
+            await _commentsDbContext.Users.AddAsync(comment.User!);
+            await _commentsDbContext.SaveChangesAsync();
+        }
+        else
+        {
+            comment.UserId = user.Id;
+            comment.User = null;
+        }
 
-        //return _mapper.Map<CommentGetDto>(comment);
+        await _commentsDbContext.Comments.AddAsync(comment);
+        await _commentsDbContext.SaveChangesAsync();
+
+        return _mapper.Map<CommentGetDto>(comment);
     }
 }
