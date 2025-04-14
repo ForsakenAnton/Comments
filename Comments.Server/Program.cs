@@ -49,8 +49,8 @@ using (var score = app.Services.CreateAsyncScope())
     var webHostEnvironment = sp.GetRequiredService<IWebHostEnvironment>();
     var dbContext = sp.GetRequiredService<CommentsDbContext>();
 
-    await dbContext.Database.EnsureDeletedAsync();
-    await dbContext.Database.EnsureCreatedAsync();
+    //await dbContext.Database.EnsureDeletedAsync();
+    //await dbContext.Database.EnsureCreatedAsync();
 
     await DbInitializer.InitializeAsync(dbContext, webHostEnvironment);
 }

@@ -37,16 +37,10 @@ public class CommentsController : ControllerBase
             .Where(c => c.ParentId == null);
 
         // Sorting
-        rootComments = commentParameters.OrderBy switch
-        {
-            "date desc" => rootComments.OrderByDescending(c => c.CreationDate),
-            "date" or "date asc" => rootComments.OrderBy(c => c.CreationDate),
-            "user_name" or "user_name asc" => rootComments.OrderBy(c => c.User!.UserName),
-            "user_name desc" => rootComments.OrderByDescending(c => c.User!.UserName),
-            "user_email" or "user_email asc" => rootComments.OrderBy(c => c.User!.Email),
-            "user_email desc" => rootComments.OrderByDescending(c => c.User!.Email),
-            _ => rootComments.OrderByDescending(c => c.CreationDate)
-        };
+        rootComments = CommentSortingHelper.ApplySorting(
+            rootComments, 
+            commentParameters.OrderBy);
+
 
         // Pagination
         rootComments = rootComments
@@ -55,7 +49,7 @@ public class CommentsController : ControllerBase
 
         // Here I explicitly load related comments (children comments)
         // and users of comments, because the users loaded before 
-        // has relation only to root comments
+        // have relation only to root comments
         await _commentsDbContext.Comments.LoadAsync();
         await _commentsDbContext.Users.LoadAsync();
 
@@ -77,14 +71,4 @@ public class CommentsController : ControllerBase
 
         return Ok(commentDtos);
     }
-
-    //private static IQueryable<Comment> OrderBy<TValue>(
-    //    IQueryable<Comment> comments,
-    //    Expression<Func<Comment, TValue>> expression,
-    //    bool descending)
-    //{
-    //    return descending
-    //        ? comments.OrderByDescending(expression)
-    //        : comments.OrderBy(expression);
-    //}
 }
