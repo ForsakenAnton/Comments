@@ -3,7 +3,7 @@ using Comments.Server.Data;
 using Comments.Server.Data.Entities;
 using Comments.Server.Models.Dtos;
 using Comments.Server.Models.RequestFeatures;
-using Comments.Server.Services;
+using Comments.Server.Services.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;

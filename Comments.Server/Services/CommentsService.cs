@@ -4,9 +4,10 @@ using Comments.Server.Data;
 using Comments.Server.Data.Entities;
 using Comments.Server.Models.Dtos;
 using Comments.Server.Models.RequestFeatures;
+using Comments.Server.Services.Contracts;
 using Microsoft.EntityFrameworkCore;
 
-namespace Comments.Server.Services.Contracts;
+namespace Comments.Server.Services;
 
 public class CommentsService : ICommentsService
 {
