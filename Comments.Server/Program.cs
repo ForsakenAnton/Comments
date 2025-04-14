@@ -4,6 +4,8 @@ using Comments.Server.Extensions;
 using Scalar.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Comments.Server.Services;
+using Comments.Server.Services.Contracts;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,6 +33,8 @@ builder.Services.ConfigureCors();
 builder.Services.AddAuthentication();
 
 builder.Services.AddScoped<ValidationFilterAttribute>();
+
+builder.Services.AddScoped<ICommentsService, CommentsService>();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
