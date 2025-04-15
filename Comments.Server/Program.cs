@@ -42,6 +42,9 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.ConfigureCors();
 builder.Services.ConfigureLoggerService();
 
+builder.Services.ConfigureRepositoryManager();
+builder.Services.ConfigureServiceManager();
+
 
 builder.Services.AddScoped<ValidationFilterAttribute>();
 
