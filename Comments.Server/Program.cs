@@ -25,6 +25,15 @@ builder.Services.AddDbContext<CommentsDbContext>(optionsAction =>
     optionsAction.UseSqlServer(cs);
 });
 
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(10);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddAutoMapper(typeof(Program));
@@ -38,6 +47,7 @@ builder.Services.AddScoped<ICommentsService, CommentsService>();
 builder.Services.AddScoped<IGenerateFileNameService, GenerateFileNameService>();
 builder.Services.AddScoped<IImageFileService, ImageFileService>();
 builder.Services.AddScoped<ITextFileService, TextFileService>();
+builder.Services.AddScoped<IGenerateCaptchaService, GenerateCaptchaService>();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -74,6 +84,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseSession();
 
 app.UseStaticFiles();
 

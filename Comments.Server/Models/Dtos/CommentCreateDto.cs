@@ -19,7 +19,7 @@ public class CommentCreateDto
         @"^[a-zA-Z0-9]+$", 
         ErrorMessage = "CAPTCHA can contain only Latin letters and numbers"
     )]
-    public string CaptchaText { get; set; } = "";
+    public string Captcha { get; set; } = "";
 
     public int? ParentId { get; set; }
 

@@ -1,4 +1,4 @@
-﻿using Comments.Server.Models.ErrorModels;
+﻿using Comments.Server.Models.ExceptionModels;
 using Comments.Server.Services.Contracts;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
@@ -64,7 +64,7 @@ public class ImageFileService : IImageFileService
     {
         if (!_allowedImageTypes.Contains(contentType.ToLower()))
         {
-            throw new UnsupportedImageContentTypeException("Only JPEG, PNG and GIF images are allowed.");
+            throw new UnsupportedImageContentTypeException();
         }
     }
 }

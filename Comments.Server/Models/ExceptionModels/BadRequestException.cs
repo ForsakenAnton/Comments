@@ -1,4 +1,4 @@
-﻿namespace Comments.Server.Models.ErrorModels
+﻿namespace Comments.Server.Models.ExceptionModels
 {
     public class BadRequestException : InvalidOperationException
     {

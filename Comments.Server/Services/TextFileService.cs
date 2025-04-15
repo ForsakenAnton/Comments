@@ -1,6 +1,5 @@
-﻿using Comments.Server.Models.ErrorModels;
+﻿using Comments.Server.Models.ExceptionModels;
 using Comments.Server.Services.Contracts;
-using Microsoft.CodeAnalysis.Text;
 
 namespace Comments.Server.Services;
 
@@ -37,7 +36,7 @@ public class TextFileService : ITextFileService
     {
         if (size > _maxSize)
         {
-            throw new TooBigFileSizeException("File size is bigger than 100KB.");
+            throw new TooBigFileSizeException();
         }
     }
 
@@ -45,7 +44,7 @@ public class TextFileService : ITextFileService
     {
         if (contentType != _allowedType)
         {
-            throw new TooBigFileSizeException("File size is bigger than 100KB.");
+            throw new UnsupportedTextContentType();
         }
     }
 }

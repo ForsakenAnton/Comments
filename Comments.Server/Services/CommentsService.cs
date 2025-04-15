@@ -89,6 +89,15 @@ public class CommentsService : ICommentsService
 
     public async Task<CommentGetDto> CreateCommentAsync(CommentCreateDto commentDto)
     {
+        //var existingUser = await _commentsDbContext.Users
+        //    .FirstOrDefaultAsync(u => u.Email == commentDto.Email);
+
+        //if (existingUser is null)
+        //{
+        //    await _commentsDbContext.Users.AddAsync(existingUser);
+        //    await _commentsDbContext.SaveChangesAsync();
+        //}
+
         string sanitizedText = _textValidator.SanitizeText(commentDto.Text);
 
         string? imageFileName = null;
@@ -110,9 +119,6 @@ public class CommentsService : ICommentsService
             "https://localhost:7092" :
             "https://qwerty123";
 
-        var comment = _mapper.Map<Comment>(commentDto);
-
-
         string? imageFileServerPath = imageFileName is not null
             ? $"{applicationUrl}/images/{imageFileName}"
             : null;
@@ -122,23 +128,28 @@ public class CommentsService : ICommentsService
             : null;
 
 
+        Comment comment = _mapper.Map<Comment>(commentDto);
+
         comment.ImageFile = imageFileServerPath;
         comment.TextFile = textFileServerPath;
         comment.Text = sanitizedText;
 
-        var user = await _commentsDbContext.Users
+        User? existingUser = await _commentsDbContext.Users
             .FirstOrDefaultAsync(u => u.Email == comment.User!.Email);
 
-        if (user is null)
+        if (existingUser is null)
         {
-            user = comment.User!;
-
             await _commentsDbContext.Users.AddAsync(comment.User!);
             await _commentsDbContext.SaveChangesAsync();
         }
         else
         {
-            comment.UserId = user.Id;
+            existingUser.UserName = comment.User!.UserName;
+            existingUser.HomePage = comment.User!.HomePage;
+            //_commentsDbContext.Users.Update(existingUser);
+            await _commentsDbContext.SaveChangesAsync();
+
+            comment.UserId = existingUser.Id;
             comment.User = null;
         }
 

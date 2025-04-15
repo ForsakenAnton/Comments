@@ -13,9 +13,10 @@ public static class ServiceExtensions
         {
             options.AddPolicy("CorsPolicy", builder =>
                 builder
-                    .AllowAnyOrigin()
+                    .WithOrigins("https://scalar.com")
                     .AllowAnyMethod()
                     .AllowAnyHeader()
+                    .AllowCredentials()
                     .WithExposedHeaders("X-Pagination"));
         });
     }
