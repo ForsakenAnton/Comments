@@ -6,6 +6,7 @@ using Comments.Server.Models.Dtos;
 using Comments.Server.Models.ExceptionModels;
 using Comments.Server.Models.RequestFeatures;
 using Comments.Server.Services.Contracts;
+using Contracts;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
@@ -18,12 +19,15 @@ public class CommentsController : ControllerBase
     private readonly ICommentsService _commentsService;
     private readonly IGenerateCaptchaService _generateCaptchaService;
 
+    private readonly ILoggerManager _loggerManager;
     public CommentsController(
         ICommentsService commentsService, 
-        IGenerateCaptchaService generateCaptchaService)
+        IGenerateCaptchaService generateCaptchaService,
+        ILoggerManager loggerManager)
     {
         _commentsService = commentsService;
         _generateCaptchaService = generateCaptchaService;
+        _loggerManager = loggerManager;
     }
 
     // GET: api/<CommentsController>
@@ -31,6 +35,13 @@ public class CommentsController : ControllerBase
     public async Task<ActionResult<IEnumerable<CommentGetDto>>> GetComments(
         [FromQuery] CommentParameters commentParameters)
     {
+        _loggerManager.LogInfo("Here is info message from our values controller.");
+        _loggerManager.LogDebug("Here is debug message from our values controller.");
+        _loggerManager.LogDebug("Here is debug message from our values controller.");
+        _loggerManager.LogDebug("Here is debug message from our values controller.");
+        _loggerManager.LogWarn("Here is warn message from our values controller.");
+        _loggerManager.LogError("Here is an error message from our values controller.");
+
         var (commentDtos, metadata) = await _commentsService
             .GetCommentsAsync(commentParameters);
 

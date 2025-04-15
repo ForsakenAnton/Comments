@@ -1,6 +1,8 @@
 ﻿// Ignore Spelling: Cors
 
 using Comments.Server.Data;
+using Contracts;
+using LoggerService;
 using Microsoft.AspNetCore.Identity;
 
 namespace Comments.Server.Extensions;
@@ -19,5 +21,10 @@ public static class ServiceExtensions
                     .AllowCredentials()
                     .WithExposedHeaders("X-Pagination"));
         });
+    }
+
+    public static void ConfigureLoggerService(this IServiceCollection services)
+    {
+        services.AddSingleton<ILoggerManager, LoggerManager>();
     }
 }

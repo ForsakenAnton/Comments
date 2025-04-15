@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Comments.Server.Services;
 using Comments.Server.Services.Contracts;
+using Microsoft.AspNetCore.HttpOverrides;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,7 +40,8 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.ConfigureCors();
-builder.Services.AddAuthentication();
+builder.Services.ConfigureLoggerService();
+
 
 builder.Services.AddScoped<ValidationFilterAttribute>();
 
@@ -88,6 +90,11 @@ app.UseHttpsRedirection();
 app.UseSession();
 
 app.UseStaticFiles();
+
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.All
+});
 
 app.UseCors("CorsPolicy");
 
