@@ -1,4 +1,4 @@
-﻿namespace Comments.Server.Data.Entities;
+﻿namespace Entities.Models;
 
 public class Comment
 {

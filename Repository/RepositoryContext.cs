@@ -1,8 +1,9 @@
-﻿using Comments.Server.Data.Entities;
-using Comments.Server.Data.EntityConfiguration;
+﻿
+using Entities.Models;
 using Microsoft.EntityFrameworkCore;
+using Repository.EntityConfiguration;
 
-namespace Comments.Server.Data;
+namespace Repository;
 
 public class RepositoryContext : DbContext
 {

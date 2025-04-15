@@ -1,8 +1,8 @@
-﻿using Comments.Server.Data.Entities;
+﻿using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Comments.Server.Data.EntityConfiguration;
+namespace Repository.EntityConfiguration;
 
 public class CommentConfiguration : IEntityTypeConfiguration<Comment>
 {

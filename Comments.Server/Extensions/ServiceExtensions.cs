@@ -4,6 +4,7 @@ using Comments.Server.Data;
 using Contracts;
 using LoggerService;
 using Microsoft.AspNetCore.Identity;
+using Repository;
 
 namespace Comments.Server.Extensions;
 
@@ -26,5 +27,10 @@ public static class ServiceExtensions
     public static void ConfigureLoggerService(this IServiceCollection services)
     {
         services.AddSingleton<ILoggerManager, LoggerManager>();
+    }
+
+    public static void ConfigureRepositoryManager(this IServiceCollection services)
+    {
+        services.AddScoped<IRepositoryManager, RepositoryManager>();
     }
 }
