@@ -8,6 +8,7 @@ using Comments.Server.Models.RequestFeatures;
 using Comments.Server.Services.Contracts;
 using Contracts;
 using Microsoft.AspNetCore.Mvc;
+using Service.Contracts;
 using System.Text.Json;
 
 namespace Comments.Server.Controllers;
@@ -16,15 +17,20 @@ namespace Comments.Server.Controllers;
 [ApiController]
 public class CommentsController : ControllerBase
 {
+    private readonly IServiceManager _serviceManager;
+
     private readonly ICommentsService _commentsService;
     private readonly IGenerateCaptchaService _generateCaptchaService;
 
     private readonly ILoggerManager _loggerManager;
     public CommentsController(
+        IServiceManager serviceManager,
         ICommentsService commentsService, 
         IGenerateCaptchaService generateCaptchaService,
         ILoggerManager loggerManager)
     {
+        _serviceManager = serviceManager;
+
         _commentsService = commentsService;
         _generateCaptchaService = generateCaptchaService;
         _loggerManager = loggerManager;
@@ -33,10 +39,16 @@ public class CommentsController : ControllerBase
     // GET: api/<CommentsController>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<CommentGetDto>>> GetComments(
-        [FromQuery] CommentParameters commentParameters)
+        [FromQuery] Shared.RequestFeatures.CommentParameters commentParameters)
     {
-        var (commentDtos, metadata) = await _commentsService
-            .GetCommentsAsync(commentParameters);
+        var (commentDtos, metadata) = await _serviceManager.CommentService
+            .GetCommentsAsync(
+                commentParameters: commentParameters,
+                trackChanges: true,
+                includeUserExpression: (c => c.User!));
+
+        //var (commentDtos, metadata) = await _commentsService
+        //    .GetCommentsAsync(commentParameters);
 
         Response.Headers.Append(
             "X-Pagination",

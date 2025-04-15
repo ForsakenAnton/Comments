@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Comments.Server.Data.Entities;
-using Comments.Server.Models.Dtos;
+using Entities.Models;
+using Shared.Dtos;
 
 namespace Comments.Server.AutoMapper;
 
