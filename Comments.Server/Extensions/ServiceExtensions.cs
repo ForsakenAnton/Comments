@@ -1,4 +1,4 @@
-﻿// Ignore Spelling: Cors
+﻿// Ignore Spelling: Cors Sql
 
 using Comments.Server.Data;
 using Contracts;
@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Repository;
 using Service.Contracts;
 using Service;
+using Microsoft.EntityFrameworkCore;
 
 namespace Comments.Server.Extensions;
 
@@ -24,6 +25,16 @@ public static class ServiceExtensions
                     .AllowCredentials()
                     .WithExposedHeaders("X-Pagination"));
         });
+    }
+
+    public static void ConfigureSqlContext(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        string sqlConnection = configuration.GetConnectionString("sqlConnection")!;
+
+        services.AddDbContext<RepositoryContext>(opts =>
+            opts.UseSqlServer(sqlConnection));
     }
 
     public static void ConfigureLoggerService(this IServiceCollection services)

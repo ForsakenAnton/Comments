@@ -40,8 +40,9 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.ConfigureCors();
-builder.Services.ConfigureLoggerService();
 
+builder.Services.ConfigureSqlContext(builder.Configuration);
+builder.Services.ConfigureLoggerService();
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
 
