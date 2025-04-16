@@ -16,17 +16,12 @@ public class CommentsController : ControllerBase
 {
     private readonly IServiceManager _serviceManager;
 
-    private readonly ICommentService _commentsService;
-
     private readonly ILoggerManager _loggerManager;
     public CommentsController(
         IServiceManager serviceManager,
-        ICommentService commentsService,
         ILoggerManager loggerManager)
     {
         _serviceManager = serviceManager;
-
-        _commentsService = commentsService;
         _loggerManager = loggerManager;
     }
 
@@ -108,7 +103,7 @@ public class CommentsController : ControllerBase
         }
 
 
-        CommentGetDto result = await _commentsService
+        CommentGetDto result = await _serviceManager.CommentService
             .CreateCommentAsync(comment, imageFileNameForSave, textFileNameForSave);
 
         return CreatedAtAction(nameof(CreateComment), new { id = result.Id }, result);
