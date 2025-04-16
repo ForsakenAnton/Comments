@@ -2,7 +2,7 @@
 
 namespace Entities.ExceptionModels;
 
-public class MissingOrExpiredCaptchaException : BadRequestException
+public sealed class MissingOrExpiredCaptchaException : BadRequestException
 {
     public MissingOrExpiredCaptchaException() 
         : base("Captcha code is missing or expired")

@@ -3,6 +3,7 @@
 using AutoMapper;
 using Contracts;
 using Entities.Models;
+using Entities.ExceptionModels;
 using Service.Contracts;
 using Shared.Dtos;
 using Shared.RequestFeatures;
@@ -30,13 +31,13 @@ internal sealed class CommentService : ICommentService
             bool trackChanges, 
             Expression<Func<Comment, User>>? includeUserExpression)
     {
-        var pagedCommentsWithMetaData = await _repository.Comment
+        PagedList<Comment> pagedCommentsWithMetaData = await _repository.Comment
             .GetCommentsAsync(commentParameters, trackChanges, includeUserExpression);
 
         var commentDtos = _mapper
             .Map<List<CommentGetDto>>(pagedCommentsWithMetaData);
 
-        var metadata = pagedCommentsWithMetaData.MetaData;
+        MetaData metadata = pagedCommentsWithMetaData.MetaData;
 
         return (commentDtos, metadata);
     }
@@ -50,9 +51,12 @@ internal sealed class CommentService : ICommentService
     {
         Comment comment = _mapper.Map<Comment>(commentDto);
 
-        // manually set image and text filenames
+        await CheckIfRootCommentOrParentCommentExists(comment);
+
+        // manually set image and text filenames, date also
         comment.ImageFileName = imageFileNameForSave;
         comment.TextFileName = textFileNameForSave;
+        comment.CreationDate = DateTime.Now;
 
         User? existingUser = await _repository.User
             .GetUserByEmailAsync(comment.User!.Email, trackChanges: true);
@@ -86,5 +90,21 @@ internal sealed class CommentService : ICommentService
         await _repository.SaveAsync();
 
         return _mapper.Map<CommentGetDto>(comment);
+    }
+
+    private async Task CheckIfRootCommentOrParentCommentExists(Comment comment)
+    {
+        if (comment.ParentId is null)
+        {
+            return; // Ok. Comment is a root comment
+        }
+
+        Comment? parentComment = await _repository.Comment
+            .GetCommentByIdAsync(comment.ParentId.Value, trackChanges: false);
+
+        if (parentComment is null)
+        {
+            throw new CommentNotFoundException(comment.ParentId.Value);
+        }
     }
 }

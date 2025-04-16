@@ -15,8 +15,8 @@ namespace Comments.Server.Controllers;
 public class CommentsController : ControllerBase
 {
     private readonly IServiceManager _serviceManager;
-
     private readonly ILoggerManager _loggerManager;
+
     public CommentsController(
         IServiceManager serviceManager,
         ILoggerManager loggerManager)
@@ -25,7 +25,7 @@ public class CommentsController : ControllerBase
         _loggerManager = loggerManager;
     }
 
-    // GET: api/<CommentsController>
+    // GET: api/comments
     [HttpGet]
     public async Task<ActionResult<IEnumerable<CommentGetDto>>> GetComments(
         [FromQuery] Shared.RequestFeatures.CommentParameters commentParameters)
@@ -36,9 +36,6 @@ public class CommentsController : ControllerBase
                 trackChanges: true,
                 includeUserExpression: (c => c.User!));
 
-        //var (commentDtos, metadata) = await _commentsService
-        //    .GetCommentsAsync(commentParameters);
-
         Response.Headers.Append(
             "X-Pagination",
             JsonSerializer.Serialize(metadata));
@@ -46,16 +43,19 @@ public class CommentsController : ControllerBase
         return Ok(commentDtos);
     }
 
+    // GET: api/comments/captcha
     [HttpGet(template: "captcha")]
     public async Task<IActionResult> GetCaptcha()
     {
-        (string code, byte[] imageBytes) = await _serviceManager.GenerateCaptchaService.GenerateCaptcha();
+        (string code, byte[] imageBytes) = 
+            await _serviceManager.GenerateCaptchaService.GenerateCaptcha();
 
         HttpContext.Session.SetString("CaptchaCode", code);
 
         return File(imageBytes, "image/png");
     }
 
+    // POST api/comments
     [HttpPost]
     [ServiceFilter(typeof(ValidationFilterAttribute))]
     //[RequestSizeLimit(...)]

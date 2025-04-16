@@ -2,7 +2,7 @@
 
 namespace Entities.ExceptionModels;
 
-public class InvalidCaptchaException : BadRequestException
+public sealed class InvalidCaptchaException : BadRequestException
 {
     public InvalidCaptchaException() 
         : base("Captcha is invalid")

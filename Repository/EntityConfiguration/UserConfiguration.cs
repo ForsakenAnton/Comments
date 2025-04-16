@@ -13,10 +13,10 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired()
             .HasMaxLength(100);
 
-        //builder
-        //    .ToTable(t => t.HasCheckConstraint(
-        //        name: "CK_User_UserName_OnlyLatinLettersAndDigits",
-        //        sql: "UserName NOT LIKE '%[^a-zA-Z0-9]%'"));
+        builder
+            .ToTable(t => t.HasCheckConstraint(
+                name: "CK_User_UserName_OnlyLatinLettersAndDigits",
+                sql: "UserName NOT LIKE '%[^a-zA-Z0-9 ]%'"));
 
         builder
             .Property(u => u.Email)

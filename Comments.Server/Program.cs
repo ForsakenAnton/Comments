@@ -18,12 +18,6 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     options.SuppressModelStateInvalidFilter = true;
 });
 
-//builder.Services.AddDbContext<CommentsDbContext>(optionsAction =>
-//{
-//    string cs = builder.Configuration.GetConnectionString("sqlConnection")!;
-//    optionsAction.UseSqlServer(cs);
-//});
-
 builder.Services.AddDistributedMemoryCache();
 
 builder.Services.AddSession(options =>
@@ -49,12 +43,6 @@ builder.Services.ConfigureServiceManager();
 
 builder.Services.AddScoped<ValidationFilterAttribute>();
 
-//builder.Services.AddScoped<ICommentsService, CommentsService>();
-//builder.Services.AddScoped<IGenerateFileNameService, GenerateFileNameService>();
-//builder.Services.AddScoped<IImageFileService, ImageFileService>();
-//builder.Services.AddScoped<ITextFileService, TextFileService>();
-
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
 var app = builder.Build();

@@ -52,9 +52,17 @@ public class CommentRepository : RepositoryBase<Comment>, ICommentRepository
         return pagedCommentsWithMetaData;
     }
 
+    public async Task<Comment?> GetCommentByIdAsync(int id, bool trackChanges)
+    {
+        var comment = await base
+            .FindByCondition(c => c.Id == id, trackChanges)
+            .FirstOrDefaultAsync();
+
+        return comment;
+    }
+
     public async Task CreateComment(Comment comment)
     {
         await base.CreateAsync(comment);
     }
-
 }

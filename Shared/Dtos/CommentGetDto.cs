@@ -8,9 +8,8 @@ public class CommentGetDto
 
     public DateTime CreationDate { get; set; }
 
-    public string? ImageFile { get; set; }
-    public string? TextFile { get; set; }
-
+    public string? ImageFileName { get; set; }
+    public string? TextFileName { get; set; }
 
     public int? ParentId { get; set; }
     public int UserId { get; set; }

@@ -10,8 +10,6 @@ public class CommentCreateDto
     [Required]
     public string Text { get; set; } = "";
 
-    //public DateTime CreationDate { get; set; } = DateTime.Now;
-
     public IFormFile? ImageFile { get; set; }
     public IFormFile? TextFile { get; set; }
 

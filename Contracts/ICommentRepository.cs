@@ -11,5 +11,6 @@ public interface ICommentRepository
         bool trackChanges,
         Expression<Func<Comment, User>>? includeUserExpression);
 
+    Task<Comment?> GetCommentByIdAsync(int id, bool trackChanges);
     public Task CreateComment(Comment comment);
 }
