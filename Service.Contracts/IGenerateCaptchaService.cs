@@ -1,6 +1,6 @@
 ﻿// Ignore Spelling: Captcha
 
-namespace Comments.Server.Services.Contracts;
+namespace Service.Contracts;
 
 public interface IGenerateCaptchaService
 {

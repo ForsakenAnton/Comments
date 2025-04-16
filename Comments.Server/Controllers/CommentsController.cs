@@ -20,19 +20,16 @@ public class CommentsController : ControllerBase
     private readonly IServiceManager _serviceManager;
 
     private readonly ICommentsService _commentsService;
-    private readonly IGenerateCaptchaService _generateCaptchaService;
 
     private readonly ILoggerManager _loggerManager;
     public CommentsController(
         IServiceManager serviceManager,
         ICommentsService commentsService, 
-        IGenerateCaptchaService generateCaptchaService,
         ILoggerManager loggerManager)
     {
         _serviceManager = serviceManager;
 
         _commentsService = commentsService;
-        _generateCaptchaService = generateCaptchaService;
         _loggerManager = loggerManager;
     }
 
@@ -60,7 +57,7 @@ public class CommentsController : ControllerBase
     [HttpGet(template: "captcha")]
     public async Task<IActionResult> GetCaptcha()
     {
-        (string code, byte[] imageBytes) = await _generateCaptchaService.GenerateCaptcha();
+        (string code, byte[] imageBytes) = await _serviceManager.GenerateCaptchaService.GenerateCaptcha();
 
         HttpContext.Session.SetString("CaptchaCode", code);
 

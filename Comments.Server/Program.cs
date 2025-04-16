@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Comments.Server.Services;
 using Comments.Server.Services.Contracts;
 using Microsoft.AspNetCore.HttpOverrides;
+using Service.Contracts;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -53,7 +54,6 @@ builder.Services.AddScoped<ICommentsService, CommentsService>();
 builder.Services.AddScoped<IGenerateFileNameService, GenerateFileNameService>();
 builder.Services.AddScoped<IImageFileService, ImageFileService>();
 builder.Services.AddScoped<ITextFileService, TextFileService>();
-builder.Services.AddScoped<IGenerateCaptchaService, GenerateCaptchaService>();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();

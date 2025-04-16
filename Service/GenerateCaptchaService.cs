@@ -1,6 +1,5 @@
 ﻿// Ignore Spelling: Captcha
 
-using Comments.Server.Services.Contracts;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
@@ -8,7 +7,7 @@ using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp.Drawing;
 
-namespace Comments.Server.Services;
+namespace Service.Contracts;
 
 public class GenerateCaptchaService : IGenerateCaptchaService
 {
