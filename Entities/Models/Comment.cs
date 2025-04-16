@@ -6,8 +6,8 @@ public class Comment
     public string Text { get; set; } = "";
     public DateTime CreationDate { get; set; }
 
-    public string? ImageFile { get; set; }
-    public string? TextFile { get; set; }
+    public string? ImageFileName { get; set; }
+    public string? TextFileName { get; set; }
 
     public int? ParentId { get; set; }
     public Comment? Parent { get; set; }

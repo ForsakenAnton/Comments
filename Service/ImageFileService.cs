@@ -1,13 +1,14 @@
-﻿using Comments.Server.Models.ExceptionModels;
-using Comments.Server.Services.Contracts;
+﻿
+using Entities.ExceptionModels;
+using Microsoft.AspNetCore.Http;
+using Service.Contracts;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 
-namespace Comments.Server.Services;
+namespace Service;
 
-public class ImageFileService : IImageFileService
+internal sealed class ImageFileService : IImageFileService
 {
-    private readonly IWebHostEnvironment _environment;
     private readonly string[] _allowedImageTypes = new[] 
     {
         "image/jpeg",
@@ -15,9 +16,10 @@ public class ImageFileService : IImageFileService
         "image/gif",
     };
 
-    public ImageFileService(IWebHostEnvironment environment)
+    private readonly string _webRootPath;
+    public ImageFileService(string webRootPath)
     {
-        _environment = environment;
+        _webRootPath = webRootPath;
     }
 
     public async Task ResizeAndSaveImageAsync(
@@ -41,7 +43,7 @@ public class ImageFileService : IImageFileService
         }
 
         string relativePath = Path.Combine("images", fileNameForSave);
-        string savePath = Path.Combine(_environment.WebRootPath, relativePath);
+        string savePath = Path.Combine(_webRootPath, relativePath);
 
         using FileStream outputStream = new FileStream(savePath, FileMode.Create);
 

@@ -1,6 +1,9 @@
-﻿namespace Contracts;
+﻿using Entities.Models;
+
+namespace Contracts;
 
 public interface IUserRepository
 {
-    //Task<IEnumerable<Comme>>
+    Task<User?> GetUserByEmailAsync(string email, bool trackChanges);
+    Task CreateUserAsync(User user);
 }

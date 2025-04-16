@@ -10,4 +10,6 @@ public interface ICommentRepository
         CommentParameters commentParameters,
         bool trackChanges,
         Expression<Func<Comment, User>>? includeUserExpression);
+
+    public Task CreateComment(Comment comment);
 }

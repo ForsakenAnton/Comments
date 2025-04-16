@@ -1,13 +1,12 @@
-﻿// Ignore Spelling: Cors Sql
+﻿// Ignore Spelling: Cors Sql env
 
-using Comments.Server.Data;
 using Contracts;
 using LoggerService;
-using Microsoft.AspNetCore.Identity;
 using Repository;
 using Service.Contracts;
 using Service;
 using Microsoft.EntityFrameworkCore;
+using Shared.Options;
 
 namespace Comments.Server.Extensions;
 
@@ -24,6 +23,14 @@ public static class ServiceExtensions
                     .AllowAnyHeader()
                     .AllowCredentials()
                     .WithExposedHeaders("X-Pagination"));
+        });
+    }
+
+    public static void ConfigureIOptions(this IServiceCollection services, IWebHostEnvironment env)
+    {
+        services.Configure<FileStorageOptions>(options =>
+        {
+            options.WebRootPath = env.WebRootPath;
         });
     }
 

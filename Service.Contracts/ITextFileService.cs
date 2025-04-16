@@ -1,4 +1,6 @@
-﻿namespace Comments.Server.Services.Contracts;
+﻿using Microsoft.AspNetCore.Http;
+
+namespace Service.Contracts;
 
 public interface ITextFileService
 {

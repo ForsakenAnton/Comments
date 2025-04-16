@@ -1,14 +1,11 @@
 ﻿using Comments.Server.ActionFilters;
-using Comments.Server.Data;
 using Comments.Server.Extensions;
 using Scalar.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Comments.Server.Services;
-using Comments.Server.Services.Contracts;
 using Microsoft.AspNetCore.HttpOverrides;
-using Service.Contracts;
-
+using Repository;
+using Microsoft.Extensions.Options;
+using Shared.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,11 +18,11 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     options.SuppressModelStateInvalidFilter = true;
 });
 
-builder.Services.AddDbContext<CommentsDbContext>(optionsAction =>
-{
-    string cs = builder.Configuration.GetConnectionString("sqlConnection")!;
-    optionsAction.UseSqlServer(cs);
-});
+//builder.Services.AddDbContext<CommentsDbContext>(optionsAction =>
+//{
+//    string cs = builder.Configuration.GetConnectionString("sqlConnection")!;
+//    optionsAction.UseSqlServer(cs);
+//});
 
 builder.Services.AddDistributedMemoryCache();
 
@@ -42,6 +39,8 @@ builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.ConfigureCors();
 
+builder.Services.ConfigureIOptions(builder.Environment);
+
 builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.ConfigureLoggerService();
 builder.Services.ConfigureRepositoryManager();
@@ -50,10 +49,10 @@ builder.Services.ConfigureServiceManager();
 
 builder.Services.AddScoped<ValidationFilterAttribute>();
 
-builder.Services.AddScoped<ICommentsService, CommentsService>();
-builder.Services.AddScoped<IGenerateFileNameService, GenerateFileNameService>();
-builder.Services.AddScoped<IImageFileService, ImageFileService>();
-builder.Services.AddScoped<ITextFileService, TextFileService>();
+//builder.Services.AddScoped<ICommentsService, CommentsService>();
+//builder.Services.AddScoped<IGenerateFileNameService, GenerateFileNameService>();
+//builder.Services.AddScoped<IImageFileService, ImageFileService>();
+//builder.Services.AddScoped<ITextFileService, TextFileService>();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -70,12 +69,15 @@ using (var score = app.Services.CreateAsyncScope())
 {
     var sp = score.ServiceProvider;
     var webHostEnvironment = sp.GetRequiredService<IWebHostEnvironment>();
-    var dbContext = sp.GetRequiredService<CommentsDbContext>();
+    var dbContext = sp.GetRequiredService<RepositoryContext>();
 
-    //await dbContext.Database.EnsureDeletedAsync();
-    //await dbContext.Database.EnsureCreatedAsync();
+    await dbContext.Database.EnsureDeletedAsync();
+    await dbContext.Database.EnsureCreatedAsync();
 
-    await DbInitializer.InitializeAsync(dbContext, webHostEnvironment);
+    var options = sp.GetRequiredService<IOptions<FileStorageOptions>>();
+    FileStorageOptions fileStorageOptions = options.Value;
+
+    await DbInitializer.InitializeAsync(dbContext, fileStorageOptions);
 }
 
 // Configure the HTTP request pipeline.

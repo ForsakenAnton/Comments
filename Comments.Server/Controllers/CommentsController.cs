@@ -1,14 +1,11 @@
 ﻿// Ignore Spelling: Dto Captcha
 
-using AutoMapper;
 using Comments.Server.ActionFilters;
-using Comments.Server.Models.Dtos;
-using Comments.Server.Models.ExceptionModels;
-using Comments.Server.Models.RequestFeatures;
-using Comments.Server.Services.Contracts;
 using Contracts;
+using Entities.ExceptionModels;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
+using Shared.Dtos;
 using System.Text.Json;
 
 namespace Comments.Server.Controllers;
@@ -19,12 +16,12 @@ public class CommentsController : ControllerBase
 {
     private readonly IServiceManager _serviceManager;
 
-    private readonly ICommentsService _commentsService;
+    private readonly ICommentService _commentsService;
 
     private readonly ILoggerManager _loggerManager;
     public CommentsController(
         IServiceManager serviceManager,
-        ICommentsService commentsService, 
+        ICommentService commentsService,
         ILoggerManager loggerManager)
     {
         _serviceManager = serviceManager;
@@ -85,7 +82,34 @@ public class CommentsController : ControllerBase
         // Here I remove the captcha
         HttpContext.Session.Remove("CaptchaCode");
 
-        CommentGetDto result = await _commentsService.CreateCommentAsync(comment);
+        // Sanitize text with existing html
+        comment.Text = await _serviceManager.HtmlSanitizerService.SanitizeTextAsync(comment.Text);
+
+        // image and text...
+        string? imageFileNameForSave = null;
+        string? textFileNameForSave = null;
+
+        if (comment.ImageFile is not null)
+        {
+            imageFileNameForSave = await _serviceManager.GenerateFileNameService
+                .GenerateFileNameAsync(comment.ImageFile);
+
+            await _serviceManager.ImageFileService
+                .ResizeAndSaveImageAsync(comment.ImageFile, imageFileNameForSave);
+        }
+
+        if (comment.TextFile is not null)
+        {
+            textFileNameForSave = await _serviceManager.GenerateFileNameService
+                .GenerateFileNameAsync(comment.TextFile);
+
+            await _serviceManager.TextFileService
+                .SaveFileAsync(comment.TextFile, textFileNameForSave);
+        }
+
+
+        CommentGetDto result = await _commentsService
+            .CreateCommentAsync(comment, imageFileNameForSave, textFileNameForSave);
 
         return CreatedAtAction(nameof(CreateComment), new { id = result.Id }, result);
     }

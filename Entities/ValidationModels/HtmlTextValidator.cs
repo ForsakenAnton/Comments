@@ -2,13 +2,13 @@
 
 using Ganss.Xss;
 
-namespace Comments.Server.Models.ValidationModels;
+namespace Entities.ValidationModels;
 
-public class CommentTextValidator
+public class HtmlTextValidator
 {
     private readonly HtmlSanitizer _sanitizer;
 
-    public CommentTextValidator()
+    public HtmlTextValidator()
     {
         _sanitizer = new HtmlSanitizer();
         _sanitizer.AllowedTags.Clear();

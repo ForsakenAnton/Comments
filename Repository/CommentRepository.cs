@@ -51,4 +51,10 @@ public class CommentRepository : RepositoryBase<Comment>, ICommentRepository
 
         return pagedCommentsWithMetaData;
     }
+
+    public async Task CreateComment(Comment comment)
+    {
+        await base.CreateAsync(comment);
+    }
+
 }

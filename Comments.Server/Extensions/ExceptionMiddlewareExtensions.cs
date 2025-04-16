@@ -1,7 +1,7 @@
 ﻿// Ignore Spelling: Middleware app
 
-using Comments.Server.Models.ErrorModels;
-using Comments.Server.Models.ExceptionModels;
+using Entities.ErrorModels;
+using Entities.ExceptionModels;
 using Microsoft.AspNetCore.Diagnostics;
 
 namespace Comments.Server.Extensions;

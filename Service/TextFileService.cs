@@ -1,18 +1,19 @@
-﻿using Comments.Server.Models.ExceptionModels;
-using Comments.Server.Services.Contracts;
+﻿
+using Entities.ExceptionModels;
+using Microsoft.AspNetCore.Http;
+using Service.Contracts;
 
-namespace Comments.Server.Services;
+namespace Service;
 
-public class TextFileService : ITextFileService
+internal sealed class TextFileService : ITextFileService
 {
-    private readonly IWebHostEnvironment _environment;
-
     private readonly string _allowedType = "text/plain";
     private readonly long _maxSize = 100 * 1024;
 
-    public TextFileService(IWebHostEnvironment environment)
+    private readonly string _webRootPath;
+    public TextFileService(string webRootPath)
     {
-        _environment = environment;
+        _webRootPath = webRootPath;
     }
 
     public async Task SaveFileAsync(IFormFile textFile, string fileNameForSave)
@@ -26,7 +27,7 @@ public class TextFileService : ITextFileService
         CheckIsValidType(textFile.ContentType);
 
         string relativePath = Path.Combine("textFiles", fileNameForSave);
-        string savePath = Path.Combine(_environment.WebRootPath, relativePath);
+        string savePath = Path.Combine(_webRootPath, relativePath);
 
         using FileStream outputStream = new FileStream(savePath, FileMode.Create);
         await textFile.CopyToAsync(outputStream);
@@ -44,7 +45,7 @@ public class TextFileService : ITextFileService
     {
         if (contentType != _allowedType)
         {
-            throw new UnsupportedTextContentType();
+            throw new UnsupportedTextContentTypeException();
         }
     }
 }

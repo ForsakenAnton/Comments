@@ -1,4 +1,6 @@
-﻿using Entities.Models;
+﻿// Ignore Spelling: Dto
+
+using Entities.Models;
 using Shared.Dtos;
 using Shared.RequestFeatures;
 using System.Linq.Expressions;
@@ -14,4 +16,9 @@ public interface ICommentService
             CommentParameters commentParameters,
             bool trackChanges,
             Expression<Func<Comment, User>>? includeUserExpression);
+
+    public Task<CommentGetDto> CreateCommentAsync(
+        CommentCreateDto commentDto,
+        string? imageFileNameForSave,
+        string? textFileNameForSave);
 }

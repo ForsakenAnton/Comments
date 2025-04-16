@@ -9,7 +9,7 @@ using SixLabors.ImageSharp.Drawing;
 
 namespace Service.Contracts;
 
-public class GenerateCaptchaService : IGenerateCaptchaService
+internal sealed class GenerateCaptchaService : IGenerateCaptchaService
 {
     public Task<(string code, byte[] imageBytes)> GenerateCaptcha()
     {
