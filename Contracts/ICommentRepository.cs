@@ -6,11 +6,22 @@ namespace Contracts;
 
 public interface ICommentRepository
 {
-    Task<PagedList<Comment>> GetCommentsAsync(
+    Task<PagedList<Comment>> GetAllCommentsWithChildrenAsync(
         CommentParameters commentParameters,
         bool trackChanges,
         Expression<Func<Comment, User>>? includeUserExpression);
 
-    Task<Comment?> GetCommentByIdAsync(int id, bool trackChanges);
+    Task<PagedList<Comment>> GetParentCommentsAsync(
+        CommentParameters commentParameters, 
+        bool trackChanges, 
+        params Expression<Func<Comment, object>>[] includeExpressions);
+
+
+    Task<Comment?> GetCommentByIdAsync(
+        int id, 
+        bool trackChanges);
+
+    Task<Comment?> GetCommentByIdWithNestedIncludes(int id, bool trackChanges);
+
     public Task CreateComment(Comment comment);
 }

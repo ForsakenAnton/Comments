@@ -8,6 +8,7 @@ using Service.Contracts;
 using Shared.Dtos;
 using Shared.RequestFeatures;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Service;
 
@@ -26,13 +27,13 @@ internal sealed class CommentService : ICommentService
 
     public async Task<(
         IEnumerable<CommentGetDto> comments, 
-        MetaData MetaData)> GetCommentsAsync(
+        MetaData MetaData)> GetAllCommentsWithChildrenAsync(
             CommentParameters commentParameters, 
             bool trackChanges, 
             Expression<Func<Comment, User>>? includeUserExpression)
     {
         PagedList<Comment> pagedCommentsWithMetaData = await _repository.Comment
-            .GetCommentsAsync(commentParameters, trackChanges, includeUserExpression);
+            .GetAllCommentsWithChildrenAsync(commentParameters, trackChanges, includeUserExpression);
 
         var commentDtos = _mapper
             .Map<List<CommentGetDto>>(pagedCommentsWithMetaData);
@@ -40,6 +41,52 @@ internal sealed class CommentService : ICommentService
         MetaData metadata = pagedCommentsWithMetaData.MetaData;
 
         return (commentDtos, metadata);
+    }
+
+
+    public async Task<(
+        IEnumerable<CommentGetDto> comments, MetaData MetaData
+        )> GetParentCommentsAsync(
+            CommentParameters commentParameters,
+            bool trackChanges,
+            params Expression<Func<Comment, object>>[] includeExpressions)
+    {
+        PagedList<Comment> pagedCommentsWithMetaData = await _repository.Comment
+            .GetParentCommentsAsync(commentParameters, trackChanges, includeExpressions);
+
+        var commentDtos = _mapper
+            .Map<List<CommentGetDto>>(pagedCommentsWithMetaData);
+
+        // Make replies count and clear the replies
+        commentDtos.ForEach(c =>
+        {
+            c.ChildrenCommentsCount = c.Replies.Count;
+            c.Replies.Clear();
+        });
+
+        MetaData metadata = pagedCommentsWithMetaData.MetaData;
+
+        return (commentDtos, metadata);
+    }
+
+
+    public async Task<IEnumerable<CommentGetDto>> GetChildrenCommentsAsync(
+        int id, 
+        bool trackChanges)
+    {
+        Comment comment = await GetCommentWithNestedIncludesAndCheckIfExists(id, trackChanges);
+
+        var commentDtos = _mapper
+            .Map<List<CommentGetDto>>(comment.Replies);
+
+        // Make replies count and clear the replies
+        commentDtos.ForEach(c =>
+        {
+            c.ChildrenCommentsCount = c.Replies.Count;
+            c.Replies.Clear();
+        });
+
+        return commentDtos;
     }
 
 
@@ -90,6 +137,35 @@ internal sealed class CommentService : ICommentService
         await _repository.SaveAsync();
 
         return _mapper.Map<CommentGetDto>(comment);
+    }
+
+    private async Task<Comment> GetCommentAndCheckIfExists(
+        int id,
+        bool trackChanges)
+    {
+        Comment? existingComment = await _repository.Comment
+            .GetCommentByIdAsync(id, trackChanges);
+        if (existingComment is null)
+        {
+            throw new CommentNotFoundException(id);
+        }
+
+        return existingComment;
+    }
+
+    private async Task<Comment> GetCommentWithNestedIncludesAndCheckIfExists(
+    int id,
+    bool trackChanges,
+    params Expression<Func<Comment, object>>[] includeExpressions)
+    {
+        Comment? existingComment = await _repository.Comment
+            .GetCommentByIdWithNestedIncludes(id, trackChanges);
+        if (existingComment is null)
+        {
+            throw new CommentNotFoundException(id);
+        }
+
+        return existingComment;
     }
 
     private async Task CheckIfRootCommentOrParentCommentExists(Comment comment)

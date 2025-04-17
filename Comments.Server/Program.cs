@@ -11,7 +11,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(c =>
+    {
+        //c.JsonSerializerOptions.MaxDepth = 64;
+    });
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {

@@ -11,6 +11,8 @@ public class CommentGetDto
     public string? ImageFileName { get; set; }
     public string? TextFileName { get; set; }
 
+    public int ChildrenCommentsCount { get; set; }
+
     public int? ParentId { get; set; }
     public int UserId { get; set; }
 

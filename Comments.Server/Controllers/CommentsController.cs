@@ -25,13 +25,14 @@ public class CommentsController : ControllerBase
         _loggerManager = loggerManager;
     }
 
+
     // GET: api/comments
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<CommentGetDto>>> GetComments(
+    [HttpGet("AllCommentsWithChildren")]
+    public async Task<ActionResult<IEnumerable<CommentGetDto>>> GetAllCommentsWithChildren(
         [FromQuery] Shared.RequestFeatures.CommentParameters commentParameters)
     {
         var (commentDtos, metadata) = await _serviceManager.CommentService
-            .GetCommentsAsync(
+            .GetAllCommentsWithChildrenAsync(
                 commentParameters: commentParameters,
                 trackChanges: true,
                 includeUserExpression: (c => c.User!));
@@ -42,6 +43,36 @@ public class CommentsController : ControllerBase
 
         return Ok(commentDtos);
     }
+
+
+    [HttpGet("ParentComments")]
+    public async Task<ActionResult<IEnumerable<CommentGetDto>>> GetParentComments(
+        [FromQuery] Shared.RequestFeatures.CommentParameters commentParameters)
+    {
+        var (commentDtos, metadata) = await _serviceManager.CommentService
+            .GetParentCommentsAsync(
+                commentParameters: commentParameters,
+                trackChanges: false,
+                includeExpressions: [c => c.User!, c => c.Replies!]);
+
+        Response.Headers.Append(
+            "X-Pagination",
+            JsonSerializer.Serialize(metadata));
+
+        return Ok(commentDtos);
+    }
+
+
+    [HttpGet("GetChildrenComments/{id:int}")]
+    public async Task<ActionResult<IEnumerable<CommentGetDto>>> GetChildrenComments(int id)
+    {
+        // Why trackChanges is true: comment => user, comment => reply => user, comment => reply => reply (the last for count)
+        var commentDtos = await _serviceManager.CommentService
+            .GetChildrenCommentsAsync(id, trackChanges: true);
+
+        return Ok(commentDtos);
+    }
+
 
     // GET: api/comments/captcha
     [HttpGet(template: "captcha")]
@@ -54,6 +85,7 @@ public class CommentsController : ControllerBase
 
         return File(imageBytes, "image/png");
     }
+
 
     // POST api/comments
     [HttpPost]
