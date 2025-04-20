@@ -21,7 +21,7 @@ public interface ICommentRepository
         int id, 
         bool trackChanges);
 
-    Task<Comment?> GetCommentByIdWithNestedIncludes(int id, bool trackChanges);
+    Task<IEnumerable<Comment>> GetCommentsWithNestedIncludesAsync(int id, bool trackChanges);
 
     public Task CreateComment(Comment comment);
 }

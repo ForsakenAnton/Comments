@@ -95,15 +95,15 @@ public class CommentRepository : RepositoryBase<Comment>, ICommentRepository
         return comment;
     }
 
-    public async Task<Comment?> GetCommentByIdWithNestedIncludes(int id, bool trackChanges)
+    public async Task<IEnumerable<Comment>> GetCommentsWithNestedIncludesAsync(int id, bool trackChanges)
     {
-        var query = base.FindAllWithNestedIncludes(
-            trackChanges,
-            q => q.Include(c => c.User),
-            q => q.Include(c => c.Replies),
-            q => q.Include(c => c.Replies)!.ThenInclude(r => r.Replies)); // here I need only replies' count
+        IQueryable<Comment> commentsWithNestedIncludes = base.RepositoryContext.Comments
+            .Include(c => c.User)
+            .Include(c => c.Replies)
+            .Where(c => c.ParentId == id)
+            .OrderByDescending(c => c.CreationDate);
 
-        return await query.FirstOrDefaultAsync(c => c.Id == id);
+        return await commentsWithNestedIncludes.ToListAsync();
     }
 
     public async Task CreateComment(Comment comment)

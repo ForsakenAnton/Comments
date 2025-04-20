@@ -1,7 +1,6 @@
 ﻿// Ignore Spelling: Funcs
 
 using Contracts;
-using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -62,23 +61,23 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
     }
 
     public IQueryable<T> FindAllWithNestedIncludes(
-    bool trackChanges,
-    params Func<IQueryable<T>, IQueryable<T>>[] includeFuncs)
-    {
-        IQueryable<T> query = RepositoryContext.Set<T>();
-
-        foreach (var include in includeFuncs)
+        bool trackChanges,
+        params Func<IQueryable<T>, IQueryable<T>>[] includeFuncs)
         {
-            query = include(query);
-        }
+            IQueryable<T> query = RepositoryContext.Set<T>();
 
-        if (!trackChanges)
-        {
-            query = query.AsNoTracking();
-        }
+            foreach (var include in includeFuncs)
+            {
+                query = include(query);
+            }
 
-        return query;
-    }
+            if (!trackChanges)
+            {
+                query = query.AsNoTracking();
+            }
+
+            return query;
+        }
 
     public void Create(T entity) => RepositoryContext.Set<T>().Add(entity);
     public async Task CreateAsync(T entity) => await RepositoryContext.Set<T>().AddAsync(entity);

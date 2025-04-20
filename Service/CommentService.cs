@@ -74,10 +74,11 @@ internal sealed class CommentService : ICommentService
         int id, 
         bool trackChanges)
     {
-        Comment comment = await GetCommentWithNestedIncludesAndCheckIfExists(id, trackChanges);
+        IEnumerable<Comment> comments = await _repository.Comment
+            .GetCommentsWithNestedIncludesAsync(id, trackChanges);
 
         var commentDtos = _mapper
-            .Map<List<CommentGetDto>>(comment.Replies);
+            .Map<List<CommentGetDto>>(comments);
 
         // Make replies count and clear the replies
         commentDtos.ForEach(c =>
@@ -153,20 +154,16 @@ internal sealed class CommentService : ICommentService
         return existingComment;
     }
 
-    private async Task<Comment> GetCommentWithNestedIncludesAndCheckIfExists(
-    int id,
-    bool trackChanges,
-    params Expression<Func<Comment, object>>[] includeExpressions)
-    {
-        Comment? existingComment = await _repository.Comment
-            .GetCommentByIdWithNestedIncludes(id, trackChanges);
-        if (existingComment is null)
-        {
-            throw new CommentNotFoundException(id);
-        }
+    //private async Task<IEnumerable<Comment>> GetChildrenCommentsWithNestedIncludesAndCheckIfExists(
+    //int id,
+    //bool trackChanges,
+    //params Expression<Func<Comment, object>>[] includeExpressions)
+    //{
+    //    IEnumerable<Comment> existingComment = await _repository.Comment
+    //        .GetCommentsWithNestedIncludesAsync(id, trackChanges);
 
-        return existingComment;
-    }
+    //    return existingComment;
+    //}
 
     private async Task CheckIfRootCommentOrParentCommentExists(Comment comment)
     {
