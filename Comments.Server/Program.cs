@@ -90,7 +90,14 @@ app.UseHttpsRedirection();
 
 app.UseSession();
 
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    OnPrepareResponse = ctx =>
+    {
+        ctx.Context.Response.Headers.Append("Access-Control-Allow-Origin", "http://localhost:5173");
+        ctx.Context.Response.Headers.Append("Access-Control-Allow-Credentials", "true");
+    }
+});
 
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {

@@ -195,7 +195,7 @@ public static class DbInitializer
                     new Comment()
                     {
                         Text = $"This is a reply to comment number {i + 1}.",
-                        CreationDate = creationDate.AddMinutes(i * i),
+                        CreationDate = creationDate.AddHours(i * i),
                         User = users[nextUserIndex],
                         Replies = new List<Comment>()
                         {
@@ -217,78 +217,80 @@ public static class DbInitializer
             });
         }
 
-        //List<Comment> comments2 = new();
-        //for (int i = 0; i < 10; i++)
-        //{
-        //    int nextUserIndex = Random.Shared.Next(0, users.Count - 1);
 
-        //    DateTime creationDate = CreateRandomDateTime();
 
-        //    string? imageFileName = i % 4 == 0 ? imageFileNames[i % imageFileNames.Length] : null;
-        //    string? textFileName = i % 5 == 0 ? textFileNameLorem : null;
+        List<Comment> comments2 = new();
+        for (int i = 0; i < 10; i++)
+        {
+            int nextUserIndex = Random.Shared.Next(0, users.Count - 1);
 
-        //    comments1.Add(new Comment()
-        //    {
-        //        Text = $"Hello, world! This is comment number {i + 1}.",
-        //        CreationDate = creationDate,
-        //        ImageFileName = imageFileName,
-        //        TextFileName = textFileName,
-        //        User = users[nextUserIndex],
-        //        Parent = null,
-        //        Replies = new List<Comment>()
-        //        {
-        //            new Comment()
-        //            {
-        //                Text = $"This is a reply to comment number {i + 1}.",
-        //                CreationDate = creationDate.AddMinutes(i),
-        //                User = users[nextUserIndex],
-        //                Replies = new List<Comment>()
-        //                {
-        //                    new Comment()
-        //                    {
-        //                        Text = $"This is a reply to the reply to comment number {i + 1}.",
-        //                        CreationDate = creationDate.AddHours(i + 1),
-        //                        User = users[nextUserIndex],
-        //                    },
-        //                    new Comment()
-        //                    {
-        //                        Text = $"This is a reply to the reply to the reply to comment number {i + 1}.",
-        //                        CreationDate = creationDate.AddHours(i + 2),
-        //                        ImageFileName = imageFileName,
-        //                        TextFileName = textFileName,
-        //                        User = users[nextUserIndex],
-        //                    },
-        //                },
-        //            }
-        //        },
-        //    });
-        //}
+            DateTime creationDate = CreateRandomDateTime();
 
-        //List<Comment> comments3 = new();
-        //for (int i = 0; i < 100; i++)
-        //{
-        //    int nextUserIndex = Random.Shared.Next(0, users.Count - 1);
+            string? imageFileName = i % 4 == 0 ? imageFileNames[i % imageFileNames.Length] : null;
+            string? textFileName = i % 5 == 0 ? textFileNameLorem : null;
 
-        //    DateTime creationDate = CreateRandomDateTime();
+            comments1.Add(new Comment()
+            {
+                Text = $"Hello, world! This is comment number {i + 1}.",
+                CreationDate = creationDate,
+                ImageFileName = imageFileName,
+                TextFileName = textFileName,
+                User = users[nextUserIndex],
+                Parent = null,
+                Replies = new List<Comment>()
+                {
+                    new Comment()
+                    {
+                        Text = $"This is a reply to comment number {i + 1}.",
+                        CreationDate = creationDate.AddMinutes(i),
+                        User = users[nextUserIndex],
+                        Replies = new List<Comment>()
+                        {
+                            new Comment()
+                            {
+                                Text = $"This is a reply to the reply to comment number {i + 1}.",
+                                CreationDate = creationDate.AddHours(i + 1),
+                                User = users[nextUserIndex],
+                            },
+                            new Comment()
+                            {
+                                Text = $"This is a reply to the reply to the reply to comment number {i + 1}.",
+                                CreationDate = creationDate.AddHours(i + 2),
+                                ImageFileName = imageFileName,
+                                TextFileName = textFileName,
+                                User = users[nextUserIndex],
+                            },
+                        },
+                    }
+                },
+            });
+        }
 
-        //    string? imageFileName = i % 6 == 0 ? imageFileNames[i % imageFileNames.Length] : null;
-        //    string? textFileName = i % 7 == 0 ? textFileNameLorem : null;
+        List<Comment> comments3 = new();
+        for (int i = 0; i < 100; i++)
+        {
+            int nextUserIndex = Random.Shared.Next(0, users.Count - 1);
 
-        //    comments3.Add(new Comment()
-        //    {
-        //        Text = $"Some Random comment {i + 1}.",
-        //        CreationDate = creationDate,
-        //        ImageFileName = imageFileName,
-        //        TextFileName = textFileName,
-        //        User = users[nextUserIndex],
-        //        Parent = null,
-        //    });
-        //}
+            DateTime creationDate = CreateRandomDateTime();
+
+            string? imageFileName = i % 6 == 0 ? imageFileNames[i % imageFileNames.Length] : null;
+            string? textFileName = i % 7 == 0 ? textFileNameLorem : null;
+
+            comments3.Add(new Comment()
+            {
+                Text = $"Some Random comment {i + 1}.",
+                CreationDate = creationDate,
+                ImageFileName = imageFileName,
+                TextFileName = textFileName,
+                User = users[nextUserIndex],
+                Parent = null,
+            });
+        }
 
 
         List<Comment> allComments = comments1
-            //.Concat(comments2)
-            //.Concat(comments3)
+            .Concat(comments2)
+            .Concat(comments3)
             .ToList();
 
         allComments = allComments
