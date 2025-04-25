@@ -75,13 +75,22 @@ public class CommentsController : ControllerBase
 
 
     // GET: api/comments/captcha
-    [HttpGet(template: "captcha")]
-    public async Task<IActionResult> GetCaptcha()
+    [HttpGet(template: "captcha/{parentCommentId:int?}")]
+    public async Task<IActionResult> GetCaptcha(int? parentCommentId)
     {
-        (string code, byte[] imageBytes) = 
+        //(string code, byte[] imageBytes, bool isNewCode) =
+        //    await _serviceManager.GenerateCaptchaService.GenerateCaptcha();
+
+        //if (isNewCode)
+        //{
+        //    HttpContext.Session.SetString("CaptchaCode", code);
+        //}
+
+        (string code, byte[] imageBytes) =
             await _serviceManager.GenerateCaptchaService.GenerateCaptcha();
 
-        HttpContext.Session.SetString("CaptchaCode", code);
+        string sessionKey = "CaptchaCode" + parentCommentId?.ToString();
+        HttpContext.Session.SetString(sessionKey, code);
 
         return File(imageBytes, "image/png");
     }
@@ -94,7 +103,8 @@ public class CommentsController : ControllerBase
     public async Task<IActionResult> CreateComment(
         [FromForm] CommentCreateDto comment)
     {
-        string? expectedCode = HttpContext.Session.GetString("CaptchaCode");
+        string sessionKey = "CaptchaCode" + comment.ParentId?.ToString();
+        string? expectedCode = HttpContext.Session.GetString(sessionKey);
 
         if (string.IsNullOrEmpty(expectedCode))
         {
@@ -106,8 +116,8 @@ public class CommentsController : ControllerBase
             throw new InvalidCaptchaException();
         }
 
-        // Here I remove the captcha
-        HttpContext.Session.Remove("CaptchaCode");
+        //// Here I remove (and don't remove 0_o, I don't know yet ) the captcha
+        HttpContext.Session.Remove(sessionKey);
 
         // Sanitize text with existing html
         comment.Text = await _serviceManager.HtmlSanitizerService.SanitizeTextAsync(comment.Text);

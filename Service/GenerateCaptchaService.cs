@@ -6,11 +6,40 @@ using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp.Drawing;
+using Microsoft.AspNetCore.Http;
+using System.Net.Http;
+using System.Text;
 
 namespace Service.Contracts;
 
 internal sealed class GenerateCaptchaService : IGenerateCaptchaService
 {
+    //private readonly ISession _session;
+    //public GenerateCaptchaService(IHttpContextAccessor httpContextAccessor)
+    //{
+    //    _session = httpContextAccessor.HttpContext.Session;
+    //}
+
+    //public Task<(string code, byte[] imageBytes, bool isNewCode)> GenerateCaptcha()
+    //{
+    //    string code = "";
+    //    bool isNewCode = false;
+
+    //    if (_session.TryGetValue("CaptchaCode", out byte[] existingCode))
+    //    {
+    //        code = Encoding.Default.GetString(existingCode);
+    //    }
+    //    else
+    //    {
+    //        code = GenerateCode(5);
+    //        isNewCode = true;
+    //    }
+
+    //    byte[] imageBytes = GenerateCaptchaImage(code);
+
+    //    return Task.FromResult((code, imageBytes, isNewCode));
+    //}
+
     public Task<(string code, byte[] imageBytes)> GenerateCaptcha()
     {
         string code = GenerateCode(5);

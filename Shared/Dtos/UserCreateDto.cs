@@ -15,5 +15,5 @@ public class UserCreateDto
     public string Email { get; set; } = "";
 
     [Url]
-    public string HomePage { get; set; } = "";
+    public string? HomePage { get; set; }
 }

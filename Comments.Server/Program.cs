@@ -22,13 +22,18 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     options.SuppressModelStateInvalidFilter = true;
 });
 
+
+//builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddDistributedMemoryCache();
 
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(10);
+    options.IdleTimeout = TimeSpan.FromMinutes(5);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
+    options.Cookie.SameSite = SameSiteMode.None;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -64,15 +69,15 @@ using (var score = app.Services.CreateAsyncScope())
     var dbContext = sp.GetRequiredService<RepositoryContext>();
 
     //await dbContext.Database.EnsureDeletedAsync();
-    bool isDbCreated = await dbContext.Database.EnsureCreatedAsync();
+    //bool isDbCreated = await dbContext.Database.EnsureCreatedAsync();
 
     var options = sp.GetRequiredService<IOptions<FileStorageOptions>>();
     FileStorageOptions fileStorageOptions = options.Value;
 
-    if (isDbCreated)
-    {
-        await DbInitializer.InitializeAsync(dbContext, fileStorageOptions);
-    }
+    //if (isDbCreated)
+    //{
+    //    await DbInitializer.InitializeAsync(dbContext, fileStorageOptions);
+    //}
 }
 
 // Configure the HTTP request pipeline.

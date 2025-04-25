@@ -2,6 +2,7 @@
 
 using AutoMapper;
 using Contracts;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Service.Contracts;
 using Shared.Options;
@@ -22,7 +23,9 @@ public sealed class ServiceManager : IServiceManager
         IRepositoryManager repositoryManager, 
         ILoggerManager logger,
         IMapper mapper,
-        IOptions<FileStorageOptions> options)
+        IOptions<FileStorageOptions> options
+        //IHttpContextAccessor httpContextAccessor
+        )
     {
         string webRootPath = options.Value.WebRootPath;
 
@@ -34,6 +37,7 @@ public sealed class ServiceManager : IServiceManager
 
         _generateCaptchaService = new Lazy<IGenerateCaptchaService>(() =>
             new GenerateCaptchaService());
+            //new GenerateCaptchaService(httpContextAccessor));
 
         _generateFileNameService = new Lazy<IGenerateFileNameService>(() =>
             new GenerateFileNameService());
