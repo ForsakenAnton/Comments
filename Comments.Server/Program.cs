@@ -69,15 +69,15 @@ using (var score = app.Services.CreateAsyncScope())
     var dbContext = sp.GetRequiredService<RepositoryContext>();
 
     //await dbContext.Database.EnsureDeletedAsync();
-    //bool isDbCreated = await dbContext.Database.EnsureCreatedAsync();
+    bool isDbCreated = await dbContext.Database.EnsureCreatedAsync();
 
     var options = sp.GetRequiredService<IOptions<FileStorageOptions>>();
     FileStorageOptions fileStorageOptions = options.Value;
 
-    //if (isDbCreated)
-    //{
-    //    await DbInitializer.InitializeAsync(dbContext, fileStorageOptions);
-    //}
+    if (isDbCreated)
+    {
+        await DbInitializer.InitializeAsync(dbContext, fileStorageOptions);
+    }
 }
 
 // Configure the HTTP request pipeline.
