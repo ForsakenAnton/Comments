@@ -83,13 +83,21 @@ using (var score = app.Services.CreateAsyncScope())
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
-    app.MapScalarApiReference(options =>
-    {
-        options.Title = "Simple Comments API";
-        options.Theme = ScalarTheme.Kepler;
-    });
+    //app.MapOpenApi();
+    //app.MapScalarApiReference(options =>
+    //{
+    //    options.Title = "Simple Comments API";
+    //    options.Theme = ScalarTheme.Kepler;
+    //});
 }
+
+// Just for testing in Production
+app.MapOpenApi();
+app.MapScalarApiReference(options =>
+{
+    options.Title = "Simple Comments API";
+    options.Theme = ScalarTheme.Kepler;
+});
 
 app.UseHttpsRedirection();
 
