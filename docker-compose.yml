@@ -1,25 +1,26 @@
 services:
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: comments_sql
+    container_name: comments-sql
     environment:
       - ACCEPT_EULA=Y
-      - SA_PASSWORD=myPassword
+      - SA_PASSWORD=StrongP@ssw0rd
     ports:
       - "1433:1433"
     networks:
       - comments-network
 
-  comments-api:
+  api:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: comments_api
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=_CommentsDb;User=sa;Password=myPassword;
+    container_name: comments-api
     ports:
-      - "5000:5000"
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=_CommentsDb;User Id=sa;Password=StrongP@ssw0rd;TrustServerCertificate=True;
+
     depends_on:
       - sqlserver
     networks:

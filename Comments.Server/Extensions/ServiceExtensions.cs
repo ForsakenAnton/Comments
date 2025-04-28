@@ -38,7 +38,7 @@ public static class ServiceExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        string sqlConnection = configuration.GetConnectionString("sqlConnection")!;
+        string sqlConnection = configuration.GetConnectionString("DefaultConnection")!;
 
         services.AddDbContext<RepositoryContext>(opts =>
             opts.UseSqlServer(sqlConnection));

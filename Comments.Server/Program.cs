@@ -6,8 +6,14 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Repository;
 using Microsoft.Extensions.Options;
 using Shared.Options;
+using Microsoft.EntityFrameworkCore;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+{
+    Args = args,
+    ContentRootPath = Directory.GetCurrentDirectory(),
+    EnvironmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"
+});
 
 // Add services to the container.
 
@@ -68,6 +74,8 @@ using (var score = app.Services.CreateAsyncScope())
     var webHostEnvironment = sp.GetRequiredService<IWebHostEnvironment>();
     var dbContext = sp.GetRequiredService<RepositoryContext>();
 
+    //await dbContext.Database.MigrateAsync();
+
     //await dbContext.Database.EnsureDeletedAsync();
     bool isDbCreated = await dbContext.Database.EnsureCreatedAsync();
 
@@ -81,23 +89,24 @@ using (var score = app.Services.CreateAsyncScope())
 }
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Docker")
 {
-    //app.MapOpenApi();
-    //app.MapScalarApiReference(options =>
-    //{
-    //    options.Title = "Simple Comments API";
-    //    options.Theme = ScalarTheme.Kepler;
-    //});
+    Console.WriteLine($"ENV_NAME: {app.Environment.EnvironmentName}");
+    app.MapOpenApi();
+    app.MapScalarApiReference(options =>
+    {
+        options.Title = "Simple Comments API";
+        options.Theme = ScalarTheme.Kepler;
+    });
 }
 
 // Just for testing in Production
-app.MapOpenApi();
-app.MapScalarApiReference(options =>
-{
-    options.Title = "Simple Comments API";
-    options.Theme = ScalarTheme.Kepler;
-});
+//app.MapOpenApi();
+//app.MapScalarApiReference(options =>
+//{
+//    options.Title = "Simple Comments API";
+//    options.Theme = ScalarTheme.Kepler;
+//});
 
 app.UseHttpsRedirection();
 
@@ -122,5 +131,7 @@ app.UseCors("CorsPolicy");
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseWelcomePage("/welcome");
 
 app.Run();

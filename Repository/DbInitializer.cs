@@ -86,7 +86,7 @@ public static class DbInitializer
 
         List<Comment> generatedComments = new();
 
-        int rootCommentCount = 200;
+        int rootCommentCount = 100;
 
         for (int i = 0; i < rootCommentCount; i++)
         {
