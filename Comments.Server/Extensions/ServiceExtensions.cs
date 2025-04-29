@@ -16,9 +16,16 @@ public static class ServiceExtensions
     {
         services.AddCors(options =>
         {
-            string[] allowedOrigins = env.IsDevelopment() || env.EnvironmentName == "Docker"
-                ? new[] { "https://localhost:5173", "http://localhost:5173" }
-                : new[] { "https://comments-client.netlify.app" };
+            //string[] allowedOrigins = env.IsDevelopment() || env.EnvironmentName == "Docker"
+            //    ? new[] { "https://localhost:5173", "http://localhost:5173" }
+            //    : new[] { "https://comments-client.netlify.app" };
+
+            string[] allowedOrigins =
+            [
+                "https://localhost:5173",
+                "http://localhost:5173",
+                "https://comments-client.netlify.app"
+            ];
 
             options.AddPolicy("CorsPolicy", policy =>
             {
