@@ -90,24 +90,24 @@ using (var score = app.Services.CreateAsyncScope())
 
 Console.WriteLine($"--- ENV_NAME: {app.Environment.EnvironmentName} ---");
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Docker")
-{
-    app.MapOpenApi();
-    app.MapScalarApiReference(options =>
-    {
-        options.Title = "Simple Comments API";
-        options.Theme = ScalarTheme.Kepler;
-    });
-}
+//// Configure the HTTP request pipeline.
+//if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Docker")
+//{
+//    app.MapOpenApi();
+//    app.MapScalarApiReference(options =>
+//    {
+//        options.Title = "Simple Comments API";
+//        options.Theme = ScalarTheme.Kepler;
+//    });
+//}
 
 // Just for testing in Production
-//app.MapOpenApi();
-//app.MapScalarApiReference(options =>
-//{
-//    options.Title = "Simple Comments API";
-//    options.Theme = ScalarTheme.Kepler;
-//});
+app.MapOpenApi();
+app.MapScalarApiReference(options =>
+{
+    options.Title = "Simple Comments API";
+    options.Theme = ScalarTheme.Kepler;
+});
 
 app.UseHttpsRedirection();
 
