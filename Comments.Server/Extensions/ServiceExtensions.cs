@@ -12,17 +12,22 @@ namespace Comments.Server.Extensions;
 
 public static class ServiceExtensions
 {
-    public static void ConfigureCors(this IServiceCollection services)
+    public static void ConfigureCors(this IServiceCollection services, IWebHostEnvironment env)
     {
         services.AddCors(options =>
         {
-            options.AddPolicy("CorsPolicy", builder =>
-                builder
-                    .WithOrigins("http://localhost:5173")
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials()
-                    .WithExposedHeaders("X-Pagination"));
+            var allowedOrigin = env.IsDevelopment() || env.EnvironmentName == "Docker"
+                ? "http://localhost:5173"
+                : "https://comments-client.myapp.com";
+
+            options.AddPolicy("CorsPolicy", policy =>
+            {
+                policy.WithOrigins(allowedOrigin)
+                      .AllowAnyMethod()
+                      .AllowAnyHeader()
+                      .AllowCredentials()
+                      .WithExposedHeaders("X-Pagination");
+            });
         });
     }
 

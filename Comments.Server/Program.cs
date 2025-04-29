@@ -46,7 +46,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddAutoMapper(typeof(Program));
 
-builder.Services.ConfigureCors();
+builder.Services.ConfigureCors(builder.Environment);
 
 builder.Services.ConfigureIOptions(builder.Environment);
 

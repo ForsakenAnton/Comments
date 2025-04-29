@@ -70,10 +70,15 @@ internal sealed class GenerateCaptchaService : IGenerateCaptchaService
         {
             ctx.Fill(Color.White);
 
-            FontCollection fontCollection = new FontCollection();
-            fontCollection.AddSystemFonts();
-            FontFamily fontFamily = fontCollection.Families.FirstOrDefault();
-            Font font = fontFamily.CreateFont(36, FontStyle.Bold);
+            string fontPath = System.IO.Path.Combine(
+                AppContext.BaseDirectory, 
+                "Fonts", 
+                "LiberationSans-Regular.ttf");
+
+            var fontCollection = new FontCollection();
+            var fontFamily = fontCollection.Add(fontPath);
+            var font = fontFamily.CreateFont(36, FontStyle.Bold);
+
 
             if (font is not null)
             {

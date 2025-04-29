@@ -14,7 +14,7 @@
     <PackageReference Include="morelinq" Version="4.4.0" />
     <PackageReference Include="Scalar.AspNetCore" Version="2.1.13" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
-    
+
   </ItemGroup>
 
   <ItemGroup>
@@ -22,5 +22,12 @@
     <ProjectReference Include="..\Repository\Repository.csproj" />
     <ProjectReference Include="..\Service\Service.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Fonts\**\*.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 
 </Project>
