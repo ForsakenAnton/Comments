@@ -88,10 +88,11 @@ using (var score = app.Services.CreateAsyncScope())
     }
 }
 
+Console.WriteLine($"--- ENV_NAME: {app.Environment.EnvironmentName} ---");
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Docker")
 {
-    Console.WriteLine($"ENV_NAME: {app.Environment.EnvironmentName}");
     app.MapOpenApi();
     app.MapScalarApiReference(options =>
     {
