@@ -118,6 +118,7 @@ app.UseStaticFiles(new StaticFileOptions
     OnPrepareResponse = ctx =>
     {
         ctx.Context.Response.Headers.Append("Access-Control-Allow-Origin", "http://localhost:5173");
+        ctx.Context.Response.Headers.Append("Access-Control-Allow-Origin", "https://comments-client.netlify.app");
         ctx.Context.Response.Headers.Append("Access-Control-Allow-Credentials", "true");
     }
 });
