@@ -7,6 +7,7 @@ using Service.Contracts;
 using Service;
 using Microsoft.EntityFrameworkCore;
 using Shared.Options;
+using Microsoft.Data.SqlClient;
 
 namespace Comments.Server.Extensions;
 
@@ -52,8 +53,11 @@ public static class ServiceExtensions
     {
         string sqlConnection = configuration.GetConnectionString("DefaultConnection")!;
 
+        //services.AddDbContext<RepositoryContext>(opts =>
+        //    opts.UseSqlServer(sqlConnection));
+
         services.AddDbContext<RepositoryContext>(opts =>
-            opts.UseSqlServer(sqlConnection));
+            opts.UseInMemoryDatabase(sqlConnection));
     }
 
     public static void ConfigureLoggerService(this IServiceCollection services)
