@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: comments-server
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /welcome
+    autoDeploy: true
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      # The app runs on EF Core InMemory, so this is just the database name,
+      # not a real connection string. Real secrets go in the Render dashboard.
+      - key: ConnectionStrings__DefaultConnection
+        value: CommentsInMemoryDb

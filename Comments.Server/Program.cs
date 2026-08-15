@@ -115,6 +115,13 @@ app.MapScalarApiReference(options =>
     options.Theme = ScalarTheme.Kepler;
 });
 
+// Must run before UseHttpsRedirection so the scheme seen by the app is the one the
+// client used, not the plain HTTP hop between the platform proxy and the container.
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.All
+});
+
 app.UseHttpsRedirection();
 
 app.UseSession();
@@ -131,11 +138,6 @@ app.UseStaticFiles(new StaticFileOptions
             ctx.Context.Response.Headers["Access-Control-Allow-Credentials"] = "true";
         }
     }
-});
-
-app.UseForwardedHeaders(new ForwardedHeadersOptions
-{
-    ForwardedHeaders = ForwardedHeaders.All
 });
 
 app.UseCors("CorsPolicy");
