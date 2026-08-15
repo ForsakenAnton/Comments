@@ -15,6 +15,12 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
     EnvironmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"
 });
 
+// Local secrets kept out of the repository: appsettings.{Environment}.Local.json (see .gitignore)
+builder.Configuration.AddJsonFile(
+    $"appsettings.{builder.Environment.EnvironmentName}.Local.json",
+    optional: true,
+    reloadOnChange: true);
+
 // Add services to the container.
 
 builder.Services.AddControllers()

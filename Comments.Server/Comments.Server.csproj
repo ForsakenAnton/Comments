@@ -29,5 +29,13 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- Local secrets: copied to bin so the app can run locally, never included in the publish output -->
+    <Content Remove="appsettings.*.Local.json" />
+    <None Include="appsettings.*.Local.json"
+          CopyToOutputDirectory="PreserveNewest"
+          CopyToPublishDirectory="Never" />
+  </ItemGroup>
+
 
 </Project>
