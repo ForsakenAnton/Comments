@@ -11,6 +11,15 @@ services:
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
         value: Production
+      # Container hosts share a low inotify instance limit, and the default
+      # appsettings reload watchers exhaust it before the app finishes starting.
+      # Config never changes at runtime here, so stop watching the files at all.
+      - key: DOTNET_hostBuilder__reloadConfigOnChange
+        value: "false"
+      # Belt and braces: if any file provider is still created, make it poll
+      # instead of allocating an inotify instance.
+      - key: DOTNET_USE_POLLING_FILE_WATCHER
+        value: "true"
       # The app runs on EF Core InMemory, so this is just the database name,
       # not a real connection string. Real secrets go in the Render dashboard.
       - key: ConnectionStrings__DefaultConnection
